@@ -1,6 +1,7 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuthStore } from '@/stores/auth';
+import NotificationBell from '@/components/NotificationBell';
 
 export default function StorefrontLayout() {
   const user = useAuthStore((s) => s.user);
@@ -34,6 +35,7 @@ export default function StorefrontLayout() {
               <Link to="/cart" className="text-sm hover:text-brand-accent">Cart</Link>
               {user ? (
                 <>
+                  <NotificationBell />
                   {user.roles?.includes('ADMIN_MAKER') && <Link to="/admin" className="text-sm hover:text-brand-accent">Admin</Link>}
                   {user.roles?.includes('PRODUCT_PUBLISHER') && <Link to="/publisher" className="text-sm hover:text-brand-accent">Publisher</Link>}
                   <button onClick={() => useAuthStore.getState().logout()} className="text-sm text-red-400 hover:text-red-300">Logout</button>

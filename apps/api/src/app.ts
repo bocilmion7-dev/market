@@ -17,6 +17,8 @@ import cartRoutes from './routes/cart';
 import orderRoutes from './routes/orders';
 import paymentRoutes from './routes/payment';
 import shippingRoutes from './routes/shipping';
+import notificationRoutes from './routes/notifications';
+import reviewRoutes from './routes/reviews';
 
 const app = express();
 
@@ -44,6 +46,8 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/shipping', shippingRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 app.use('/api', storefrontRoutes);
 
