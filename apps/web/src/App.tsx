@@ -14,6 +14,10 @@ import PublisherLayout from '@/components/layout/PublisherLayout';
 import PublisherDashboard from '@/routes/publisher/Dashboard';
 import PublisherProducts from '@/routes/publisher/Products';
 import ProductForm from '@/routes/publisher/ProductForm';
+import StorefrontLayout from '@/components/layout/StorefrontLayout';
+import Home from '@/routes/storefront/Home';
+import ProductList from '@/routes/storefront/ProductList';
+import ProductDetail from '@/routes/storefront/ProductDetail';
 
 const queryClient = new QueryClient();
 
@@ -53,7 +57,11 @@ function App() {
             <Route path="products/new" element={<ProductForm />} />
             <Route path="products/:id" element={<ProductForm />} />
           </Route>
-          <Route path="/" element={<div className="p-4"><h1>Storefront</h1></div>} />
+          <Route path="/" element={<StorefrontLayout />}>
+            <Route index element={<Home />} />
+            <Route path="products" element={<ProductList />} />
+            <Route path="products/:slug" element={<ProductDetail />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

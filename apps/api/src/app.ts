@@ -11,6 +11,7 @@ import adminSettingsRoutes from './routes/admin/settings';
 import adminFormBuilderRoutes from './routes/admin/form-builder';
 import adminApprovalRoutes from './routes/admin/approval';
 import publisherProductRoutes from './routes/publisher/products';
+import storefrontRoutes from './routes/storefront';
 
 const app = express();
 
@@ -32,6 +33,8 @@ app.use('/api/admin', adminFormBuilderRoutes);
 app.use('/api/admin', adminApprovalRoutes);
 
 app.use('/api/publisher/products', publisherProductRoutes);
+
+app.use('/api', storefrontRoutes);
 
 app.use(errorHandler);
 
