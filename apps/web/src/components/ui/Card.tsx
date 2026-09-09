@@ -4,7 +4,7 @@ type CardVariant = 'elevated' | 'outlined' | 'filled';
 
 interface CardProps {
   variant?: CardVariant;
-  padding?: 'sm' | 'md' | 'lg';
+  padding?: 'none' | 'sm' | 'md' | 'lg';
   className?: string;
   children: React.ReactNode;
   onClick?: () => void;
@@ -17,6 +17,7 @@ const variantStyles: Record<CardVariant, string> = {
 };
 
 const paddingStyles = {
+  none: '',
   sm: 'p-3',
   md: 'p-4',
   lg: 'p-6',
