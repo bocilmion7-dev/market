@@ -283,6 +283,7 @@ model ProductApprovalHistory {
   reviewer User?   @relation(fields: [reviewerId], references: [id])
 
   @@index([productId])
+  @@index([reviewerId])
   @@map("product_approval_history")
 }
 
@@ -327,6 +328,8 @@ model Cart {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   items CartItem[]
+
+  @@map("carts")
 }
 
 model CartItem {
@@ -343,6 +346,7 @@ model CartItem {
   variant ProductVariant?   @relation(fields: [variantId], references: [id])
 
   @@index([cartId])
+  @@index([variantId])
   @@map("cart_items")
 }
 
@@ -360,6 +364,8 @@ model CheckoutSession {
   customer Customer? @relation(fields: [customerId], references: [id])
   orders   Order[]
   payments Payment[]
+
+  @@index([customerId])
 }
 
 model Order {
@@ -389,6 +395,7 @@ model Order {
 
   @@index([publisherId])
   @@index([customerId])
+  @@index([shippingAddressId])
   @@index([orderStatus])
   @@map("orders")
 }
@@ -417,6 +424,7 @@ model OrderItem {
   reviews Review[]
 
   @@index([orderId])
+  @@index([variantId])
   @@map("order_items")
 }
 
