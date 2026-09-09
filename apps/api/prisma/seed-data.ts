@@ -401,7 +401,7 @@ async function main() {
             sku,
             stock,
             hasVariants: true,
-            status: 'APPROVED',
+            status: 'PUBLISHED',
           },
         });
 

@@ -3,6 +3,16 @@ import { useHomepage } from '@/features/storefront/hooks';
 import SEOHead from '@/components/SEOHead';
 import { Skeleton } from '@/components/ui';
 
+function getCategoryIcon(name: string): string {
+  const lower = name.toLowerCase();
+  if (lower.includes('fashion')) return '👕';
+  if (lower.includes('elektronik')) return '📱';
+  if (lower.includes('makanan') || lower.includes('minuman')) return '🍜';
+  if (lower.includes('rumah') || lower.includes('dapur')) return '🏠';
+  if (lower.includes('kecantikan')) return '💄';
+  return '📦';
+}
+
 export default function Home() {
   const { data, isLoading } = useHomepage();
 
@@ -25,19 +35,20 @@ export default function Home() {
 
       <section className="max-w-7xl mx-auto px-4 py-8 md:py-12">
         <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Categories</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
           {isLoading ? (
-            Array(4).fill(0).map((_, i) => (
-              <Skeleton key={i} className="h-20 rounded-lg" />
+            Array(5).fill(0).map((_, i) => (
+              <Skeleton key={i} className="h-24 rounded-lg" />
             ))
           ) : (
             data?.categories?.map((cat: any) => (
               <Link
                 key={cat.id}
                 to={`/products?categoryId=${cat.id}`}
-                className="bg-[rgb(var(--bg-primary))] rounded-lg p-4 text-center hover:shadow-md transition-shadow touch-target"
+                className="bg-[rgb(var(--bg-primary))] rounded-lg p-4 flex flex-col items-center justify-center gap-2 hover:shadow-md transition-shadow touch-target h-24"
               >
-                <p className="font-medium text-sm md:text-base">{cat.name}</p>
+                <span className="text-2xl">{getCategoryIcon(cat.name)}</span>
+                <p className="font-medium text-xs md:text-sm text-center leading-tight">{cat.name}</p>
               </Link>
             ))
           )}
