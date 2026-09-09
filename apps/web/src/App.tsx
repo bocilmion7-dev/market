@@ -9,6 +9,7 @@ import AdminCategories from '@/routes/admin/Categories';
 import AdminBrands from '@/routes/admin/Brands';
 import AdminSettings from '@/routes/admin/Settings';
 import FormBuilderPage from '@/routes/admin/FormBuilder';
+import Approvals from '@/routes/admin/Approvals';
 import PublisherLayout from '@/components/layout/PublisherLayout';
 import PublisherDashboard from '@/routes/publisher/Dashboard';
 import PublisherProducts from '@/routes/publisher/Products';
@@ -37,6 +38,7 @@ function App() {
             <Route path="settings" element={<AdminSettings />} />
             <Route path="form-builder" element={<FormBuilderPage />} />
             <Route path="form-builder/:id" element={<FormBuilderPage />} />
+            <Route path="approvals" element={<Approvals />} />
           </Route>
           <Route
             path="/publisher"

@@ -22,6 +22,23 @@ interface Settings {
   admin_fee_percentage?: { percentage: number };
 }
 
+interface PaginatedPendingProducts {
+  products: Array<{
+    id: string;
+    name: string;
+    sku: string;
+    marketplacePrice: string;
+    updatedAt: string;
+    publisher?: { fullName: string; businessName?: string };
+    category?: { name: string };
+    brand?: { name: string };
+  }>;
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 // Users
 export function useUsers(page = 1, search = '') {
   return useQuery({
@@ -99,6 +116,31 @@ export function useDeleteBrand() {
   return useMutation({
     mutationFn: (id: string) => api.delete(`/admin/brands/${id}`),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'brands'] }),
+  });
+}
+
+// Approvals
+export function usePendingProducts(page = 1) {
+  return useQuery({
+    queryKey: ['admin', 'pending-products', page],
+    queryFn: () => api.get<PaginatedPendingProducts>(`/admin/pending-products?page=${page}`),
+  });
+}
+
+export function useApproveProduct() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.post(`/admin/products/${id}/approve`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'pending-products'] }),
+  });
+}
+
+export function useRejectProduct() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
+      api.post(`/admin/products/${id}/reject`, { reason }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'pending-products'] }),
   });
 }
 

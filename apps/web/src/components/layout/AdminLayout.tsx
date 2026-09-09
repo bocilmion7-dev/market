@@ -9,6 +9,7 @@ const navItems = [
   { label: 'Brands', path: '/admin/brands' },
   { label: 'Settings', path: '/admin/settings' },
   { label: 'Form Builder', path: '/admin/form-builder' },
+  { label: 'Approvals', path: '/admin/approvals' },
 ];
 
 export default function AdminLayout() {
