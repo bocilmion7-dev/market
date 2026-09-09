@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/stores/auth';
+import type { User } from '@/stores/auth';
 import { useNavigate } from 'react-router-dom';
 
 export function useMe() {
@@ -8,9 +9,10 @@ export function useMe() {
   return useQuery({
     queryKey: ['auth', 'me'],
     queryFn: async () => {
-      const data = await api.get<{ id: string; email: string; fullName: string; roles: string[]; publisherProfileId?: string }>('/auth/me');
+      return api.get<User>('/auth/me');
+    },
+    onSuccess: (data: User) => {
       setUser(data);
-      return data;
     },
     retry: false,
     staleTime: 5 * 60 * 1000,
@@ -23,7 +25,7 @@ export function useLogin() {
   return useMutation({
     mutationFn: (credentials: { email: string; password: string }) =>
       api.post('/auth/login', credentials),
-    onSuccess: (data: any) => {
+    onSuccess: (data: User) => {
       queryClient.setQueryData(['auth', 'me'], data);
       if (data.roles.includes('ADMIN_MAKER')) {
         navigate('/admin');
