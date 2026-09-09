@@ -6,3 +6,562 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique @db.VarChar(255)
+  passwordHash  String    @map("password_hash") @db.Text
+  fullName      String    @map("full_name") @db.VarChar(150)
+  phone         String?   @db.VarChar(30)
+  status        String    @db.VarChar(30)
+  lastLoginAt   DateTime? @map("last_login_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  roles                        UserRole[]
+  publisherProfile             PublisherProfile?
+  notifications                Notification[]
+  auditLogs                    AuditLog[]        @relation("AuditActor")
+  sessions                     Session[]
+  createdCategoryFormSchemas   CategoryFormSchema[]
+  createdVariantFormSchemas    VariantFormSchema[]
+  productApprovalHistories     ProductApprovalHistory[]
+  updatedSettings              Setting[]
+
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique @db.VarChar(50)
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  users UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  userId    String   @map("user_id")
+  roleId    String   @map("role_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+  role Role @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model Session {
+  sid        String   @id
+  sess       Json
+  expire     DateTime
+  userId     String?  @map("user_id")
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@map("user_sessions")
+}
+
+model PublisherProfile {
+  id         String  @id @default(uuid())
+  userId     String  @unique @map("user_id")
+  fullName   String  @map("full_name") @db.VarChar(150)
+  phone      String  @db.VarChar(30)
+  address    String  @db.Text
+  provinceId String  @map("province_id") @db.VarChar(50)
+  cityId     String  @map("city_id") @db.VarChar(50)
+  districtId String  @map("district_id") @db.VarChar(50)
+  postalCode String? @map("postal_code") @db.VarChar(10)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  user     User      @relation(fields: [userId], references: [id])
+  products Product[]
+  orders   Order[]
+  shipments Shipment[]
+
+  @@map("publisher_profiles")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique @db.VarChar(150)
+  slug        String   @unique @db.VarChar(180)
+  description String?  @db.Text
+  status      String   @db.VarChar(30)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  products           Product[]
+  categoryFormSchemas CategoryFormSchema[]
+  variantFormSchemas  VariantFormSchema[]
+
+  @@map("categories")
+}
+
+model Brand {
+  id        String   @id @default(uuid())
+  name      String   @unique @db.VarChar(150)
+  slug      String   @unique @db.VarChar(180)
+  status    String   @db.VarChar(30)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  products Product[]
+
+  @@map("brands")
+}
+
+model CategoryFormSchema {
+  id         String   @id @default(uuid())
+  categoryId String   @map("category_id")
+  version    Int
+  status     String   @db.VarChar(30)
+  createdBy  String?  @map("created_by")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  category Category          @relation(fields: [categoryId], references: [id])
+  creator  User?             @relation(fields: [createdBy], references: [id])
+  fields   CategoryFormField[]
+  products Product[]
+
+  @@unique([categoryId, version])
+  @@map("category_form_schemas")
+}
+
+model CategoryFormField {
+  id              String  @id @default(uuid())
+  schemaId        String  @map("schema_id")
+  fieldKey        String  @map("field_key") @db.VarChar(100)
+  label           String  @db.VarChar(150)
+  fieldType       String  @map("field_type") @db.VarChar(50)
+  required        Boolean
+  placeholder     String? @db.VarChar(255)
+  helpText        String? @map("help_text") @db.Text
+  defaultValue    Json?   @map("default_value")
+  options         Json?
+  validationRules Json?   @map("validation_rules")
+  sortOrder       Int     @map("sort_order")
+  status          String  @db.VarChar(30)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  schema CategoryFormSchema @relation(fields: [schemaId], references: [id])
+
+  @@unique([schemaId, fieldKey])
+  @@map("category_form_fields")
+}
+
+model VariantFormSchema {
+  id         String   @id @default(uuid())
+  categoryId String   @map("category_id")
+  version    Int
+  status     String   @db.VarChar(30)
+  createdBy  String?  @map("created_by")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  category Category           @relation(fields: [categoryId], references: [id])
+  creator  User?              @relation(fields: [createdBy], references: [id])
+  fields   VariantFormField[]
+  variants ProductVariant[]
+
+  @@unique([categoryId, version])
+  @@map("variant_form_schemas")
+}
+
+model VariantFormField {
+  id              String  @id @default(uuid())
+  schemaId        String  @map("schema_id")
+  fieldKey        String  @map("field_key") @db.VarChar(100)
+  label           String  @db.VarChar(150)
+  fieldType       String  @map("field_type") @db.VarChar(50)
+  required        Boolean
+  options         Json?
+  validationRules Json?   @map("validation_rules")
+  sortOrder       Int     @map("sort_order")
+  status          String  @db.VarChar(30)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  schema VariantFormSchema @relation(fields: [schemaId], references: [id])
+
+  @@unique([schemaId, fieldKey])
+  @@map("variant_form_fields")
+}
+
+model Product {
+  id                    String   @id @default(uuid())
+  publisherId           String   @map("publisher_id")
+  categoryId            String   @map("category_id")
+  brandId               String?  @map("brand_id")
+  categoryFormSchemaId  String   @map("category_form_schema_id")
+  name                  String   @db.VarChar(255)
+  slug                  String   @unique @db.VarChar(280)
+  description           String   @db.Text
+  categoryFormData      Json     @map("category_form_data")
+  bestPrice             Decimal  @map("best_price") @db.Decimal(18, 2)
+  adminFeePercentage    Decimal  @map("admin_fee_percentage") @db.Decimal(8, 4)
+  adminFeeAmount        Decimal  @map("admin_fee_amount") @db.Decimal(18, 2)
+  marketplacePrice      Decimal  @map("marketplace_price") @db.Decimal(18, 2)
+  sku                   String   @unique @db.VarChar(100)
+  stock                 Int
+  hasVariants           Boolean  @default(false) @map("has_variants")
+  status                String   @db.VarChar(40)
+  rejectionReason       String?  @map("rejection_reason") @db.Text
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  publisher        PublisherProfile     @relation(fields: [publisherId], references: [id])
+  category         Category             @relation(fields: [categoryId], references: [id])
+  brand            Brand?               @relation(fields: [brandId], references: [id])
+  categorySchema   CategoryFormSchema   @relation(fields: [categoryFormSchemaId], references: [id])
+  variants         ProductVariant[]
+  media            ProductMedia[]
+  approvalHistory  ProductApprovalHistory[]
+  cartItems        CartItem[]
+  orderItems       OrderItem[]
+  reviews          Review[]
+
+  @@index([publisherId])
+  @@index([categoryId])
+  @@index([status])
+  @@map("products")
+}
+
+model ProductVariant {
+  id                    String   @id @default(uuid())
+  productId             String   @map("product_id")
+  variantFormSchemaId   String   @map("variant_form_schema_id")
+  variantFormData       Json     @map("variant_form_data")
+  sku                   String   @unique @db.VarChar(100)
+  bestPrice             Decimal  @map("best_price") @db.Decimal(18, 2)
+  adminFeePercentage    Decimal  @map("admin_fee_percentage") @db.Decimal(8, 4)
+  adminFeeAmount        Decimal  @map("admin_fee_amount") @db.Decimal(18, 2)
+  marketplacePrice      Decimal  @map("marketplace_price") @db.Decimal(18, 2)
+  stock                 Int
+  status                String   @db.VarChar(30)
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  product       Product              @relation(fields: [productId], references: [id])
+  variantSchema VariantFormSchema    @relation(fields: [variantFormSchemaId], references: [id])
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
+
+  @@index([productId])
+  @@map("product_variants")
+}
+
+model ProductMedia {
+  id        String   @id @default(uuid())
+  productId String   @map("product_id")
+  url       String   @db.Text
+  altText   String?  @db.VarChar(255)
+  sortOrder Int      @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([productId])
+  @@map("product_media")
+}
+
+model ProductApprovalHistory {
+  id         String   @id @default(uuid())
+  productId  String   @map("product_id")
+  reviewerId String?  @map("reviewer_id")
+  action     String   @db.VarChar(30)
+  note       String?  @db.Text
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  product  Product @relation(fields: [productId], references: [id])
+  reviewer User?   @relation(fields: [reviewerId], references: [id])
+
+  @@index([productId])
+  @@map("product_approval_history")
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(150)
+  email     String   @db.VarChar(255)
+  phone     String   @db.VarChar(30)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  addresses          CustomerAddress[]
+  checkoutSessions   CheckoutSession[]
+  orders             Order[]
+
+  @@map("customers")
+}
+
+model CustomerAddress {
+  id            String   @id @default(uuid())
+  customerId    String   @map("customer_id")
+  recipientName String   @map("recipient_name") @db.VarChar(150)
+  phone         String   @db.VarChar(30)
+  address       String   @db.Text
+  provinceId    String   @map("province_id") @db.VarChar(50)
+  cityId        String   @map("city_id") @db.VarChar(50)
+  districtId    String   @map("district_id") @db.VarChar(50)
+  postalCode    String   @map("postal_code") @db.VarChar(10)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  customer         Customer          @relation(fields: [customerId], references: [id])
+  shippingOrders   Order[]           @relation("ShippingAddress")
+
+  @@index([customerId])
+  @@map("customer_addresses")
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  sessionId String   @unique @map("session_id") @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  items CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String   @map("cart_id")
+  productId String   @map("product_id")
+  variantId String?  @map("variant_id")
+  quantity  Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  cart    Cart              @relation(fields: [cartId], references: [id])
+  product Product           @relation(fields: [productId], references: [id])
+  variant ProductVariant?   @relation(fields: [variantId], references: [id])
+
+  @@index([cartId])
+  @@map("cart_items")
+}
+
+model CheckoutSession {
+  id                       String   @id @default(uuid())
+  sessionReference         String   @unique @map("session_reference") @db.VarChar(100)
+  customerId               String?  @map("customer_id")
+  subtotalMarketplacePrice Decimal  @map("subtotal_marketplace_price") @db.Decimal(18, 2)
+  shippingTotal            Decimal  @map("shipping_total") @db.Decimal(18, 2)
+  grandTotal               Decimal  @map("grand_total") @db.Decimal(18, 2)
+  status                   String   @db.VarChar(40)
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @updatedAt @map("updated_at")
+
+  customer Customer? @relation(fields: [customerId], references: [id])
+  orders   Order[]
+  payments Payment[]
+}
+
+model Order {
+  id                        String   @id @default(uuid())
+  checkoutSessionId         String?  @map("checkout_session_id")
+  orderNumber               String   @unique @map("order_number") @db.VarChar(50)
+  publisherId               String   @map("publisher_id")
+  customerId                String   @map("customer_id")
+  shippingAddressId         String?  @map("shipping_address_id")
+  subtotalBestPrice         Decimal  @map("subtotal_best_price") @db.Decimal(18, 2)
+  subtotalMarketplacePrice  Decimal  @map("subtotal_marketplace_price") @db.Decimal(18, 2)
+  shippingCost              Decimal  @map("shipping_cost") @db.Decimal(18, 2)
+  grandTotal                Decimal  @map("grand_total") @db.Decimal(18, 2)
+  orderStatus               String   @map("order_status") @db.VarChar(40)
+  paymentStatus             String   @map("payment_status") @db.VarChar(40)
+  createdAt                 DateTime @default(now()) @map("created_at")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
+
+  checkoutSession  CheckoutSession?   @relation(fields: [checkoutSessionId], references: [id])
+  publisher        PublisherProfile   @relation(fields: [publisherId], references: [id])
+  customer         Customer           @relation(fields: [customerId], references: [id])
+  shippingAddress  CustomerAddress?   @relation("ShippingAddress", fields: [shippingAddressId], references: [id])
+  items            OrderItem[]
+  shipment         Shipment?
+  payment          Payment?
+  reviews          Review[]
+
+  @@index([publisherId])
+  @@index([customerId])
+  @@index([orderStatus])
+  @@map("orders")
+}
+
+model OrderItem {
+  id                         String   @id @default(uuid())
+  orderId                    String   @map("order_id")
+  productId                  String   @map("product_id")
+  variantId                  String?  @map("variant_id")
+  productNameSnapshot        String   @map("product_name_snapshot") @db.VarChar(255)
+  skuSnapshot                String   @map("sku_snapshot") @db.VarChar(100)
+  variantSnapshot            String?  @map("variant_snapshot") @db.VarChar(255)
+  bestPriceSnapshot          Decimal  @map("best_price_snapshot") @db.Decimal(18, 2)
+  adminFeePercentageSnapshot Decimal  @map("admin_fee_percentage_snapshot") @db.Decimal(8, 4)
+  adminFeeAmountSnapshot     Decimal  @map("admin_fee_amount_snapshot") @db.Decimal(18, 2)
+  marketplacePriceSnapshot   Decimal  @map("marketplace_price_snapshot") @db.Decimal(18, 2)
+  quantity                   Int
+  subtotalBestPrice          Decimal  @map("subtotal_best_price") @db.Decimal(18, 2)
+  subtotalMarketplacePrice   Decimal  @map("subtotal_marketplace_price") @db.Decimal(18, 2)
+  profit                     Decimal  @db.Decimal(18, 2)
+  createdAt                  DateTime @default(now()) @map("created_at")
+
+  order   Order           @relation(fields: [orderId], references: [id])
+  product Product         @relation(fields: [productId], references: [id])
+  variant ProductVariant? @relation(fields: [variantId], references: [id])
+  reviews Review[]
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+model Payment {
+  id                     String   @id @default(uuid())
+  checkoutSessionId      String?  @map("checkout_session_id")
+  orderId                String   @unique @map("order_id")
+  provider               String   @db.VarChar(50)
+  providerTransactionId  String?  @unique @map("provider_transaction_id") @db.VarChar(255)
+  paymentReference       String?  @map("payment_reference") @db.VarChar(255)
+  paymentMethod          String?  @map("payment_method") @db.VarChar(100)
+  amount                 Decimal  @db.Decimal(18, 2)
+  status                 String   @db.VarChar(40)
+  paidAt                 DateTime? @map("paid_at")
+  expiredAt              DateTime? @map("expired_at")
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  checkoutSession CheckoutSession? @relation(fields: [checkoutSessionId], references: [id])
+  order           Order            @relation(fields: [orderId], references: [id])
+  transactions    PaymentTransaction[]
+
+  @@index([orderId])
+  @@map("payments")
+}
+
+model PaymentTransaction {
+  id               String   @id @default(uuid())
+  paymentId        String   @map("payment_id")
+  providerEventId  String?  @map("provider_event_id") @db.VarChar(255)
+  eventType        String   @map("event_type") @db.VarChar(100)
+  payload          Json
+  processed        Boolean
+  processedAt      DateTime? @map("processed_at")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  payment Payment @relation(fields: [paymentId], references: [id])
+
+  @@index([paymentId])
+  @@map("payment_transactions")
+}
+
+model Shipment {
+  id           String   @id @default(uuid())
+  orderId      String   @unique @map("order_id")
+  publisherId  String   @map("publisher_id")
+  courier      String   @db.VarChar(100)
+  service      String   @db.VarChar(100)
+  shippingCost Decimal  @map("shipping_cost") @db.Decimal(18, 2)
+  weightGram   Int      @map("weight_gram")
+  awb          String?  @db.VarChar(150)
+  status       String   @db.VarChar(40)
+  shippedAt    DateTime? @map("shipped_at")
+  deliveredAt  DateTime? @map("delivered_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  order    Order              @relation(fields: [orderId], references: [id])
+  publisher PublisherProfile   @relation(fields: [publisherId], references: [id])
+  tracking ShippingTracking[]
+
+  @@map("shipments")
+}
+
+model ShippingTracking {
+  id          String   @id @default(uuid())
+  shipmentId  String   @map("shipment_id")
+  status      String   @db.VarChar(100)
+  description String?  @db.Text
+  location    String?  @db.VarChar(255)
+  eventTime   DateTime @map("event_time")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  shipment Shipment @relation(fields: [shipmentId], references: [id])
+
+  @@index([shipmentId])
+  @@map("shipping_tracking")
+}
+
+model Notification {
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  type          String    @db.VarChar(100)
+  title         String    @db.VarChar(255)
+  message       String    @db.Text
+  referenceType String?   @map("reference_type") @db.VarChar(100)
+  referenceId   String?   @map("reference_id")
+  readAt        DateTime? @map("read_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("notifications")
+}
+
+model Review {
+  id           String   @id @default(uuid())
+  productId    String   @map("product_id")
+  orderId      String   @map("order_id")
+  orderItemId  String   @map("order_item_id")
+  rating       Int
+  reviewText   String?  @map("review_text") @db.Text
+  customerName String   @map("customer_name") @db.VarChar(150)
+  status       String   @db.VarChar(30)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  product   Product    @relation(fields: [productId], references: [id])
+  order     Order      @relation(fields: [orderId], references: [id])
+  orderItem OrderItem  @relation(fields: [orderItemId], references: [id])
+
+  @@index([productId])
+  @@index([orderItemId])
+  @@map("reviews")
+}
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  actorUserId  String?  @map("actor_user_id")
+  action       String   @db.VarChar(100)
+  entityType   String   @map("entity_type") @db.VarChar(100)
+  entityId     String?  @map("entity_id")
+  oldData      Json?    @map("old_data")
+  newData      Json?    @map("new_data")
+  ipAddress    String?  @map("ip_address") @db.VarChar(45)
+  userAgent    String?  @map("user_agent") @db.Text
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  actor User? @relation("AuditActor", fields: [actorUserId], references: [id])
+
+  @@index([actorUserId])
+  @@index([entityType, entityId])
+  @@map("audit_logs")
+}
+
+model Setting {
+  id        String   @id @default(uuid())
+  key       String   @unique @db.VarChar(100)
+  value     Json
+  updatedBy String?  @map("updated_by")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  updater User? @relation(fields: [updatedBy], references: [id])
+
+  @@map("settings")
+}
