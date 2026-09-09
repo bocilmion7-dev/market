@@ -19,6 +19,7 @@ import paymentRoutes from './routes/payment';
 import shippingRoutes from './routes/shipping';
 import notificationRoutes from './routes/notifications';
 import reviewRoutes from './routes/reviews';
+import wishlistRoutes from './routes/wishlist';
 import adminReportRoutes from './routes/admin/reports';
 
 const app = express();
@@ -49,6 +50,7 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/shipping', shippingRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 app.use('/api/admin', adminReportRoutes);
 

@@ -40,7 +40,7 @@ export default function Checkout() {
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Checkout</h1>
 
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <h2 className="font-bold mb-4">Shipping Address</h2>
           <textarea

@@ -2,6 +2,7 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuthStore } from '@/stores/auth';
 import NotificationBell from '@/components/NotificationBell';
+import MobileNav from '@/components/MobileNav';
 
 export default function StorefrontLayout() {
   const user = useAuthStore((s) => s.user);
@@ -15,7 +16,8 @@ export default function StorefrontLayout() {
 
   return (
     <div className="min-h-screen bg-brand-muted">
-      <header className="bg-brand-dark text-white sticky top-0 z-40">
+      <MobileNav />
+      <header className="bg-brand-dark text-white sticky top-0 z-40 hidden md:block">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="text-xl font-bold">Marketplace</Link>

@@ -1,14 +1,16 @@
 import { Link } from 'react-router-dom';
 import { useHomepage } from '@/features/storefront/hooks';
+import SEOHead from '@/components/SEOHead';
 
 export default function Home() {
   const { data, isLoading } = useHomepage();
 
   return (
     <div>
+      <SEOHead title="Home" description="Discover products from multiple publishers at great prices" />
       <section className="bg-gradient-to-r from-brand-dark to-brand-accent text-white py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold mb-4">Welcome to Marketplace</h1>
+          <h1 className="text-2xl md:text-4xl font-bold mb-4">Welcome to Marketplace</h1>
           <p className="text-lg mb-8 text-gray-200">Discover products from multiple publishers</p>
           <Link to="/products" className="bg-white text-brand-dark px-8 py-3 rounded-lg font-semibold hover:bg-gray-100">
             Browse Products

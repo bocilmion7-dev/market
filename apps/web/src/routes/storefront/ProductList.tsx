@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useStoreProducts, useStoreCategories } from '@/features/storefront/hooks';
+import SEOHead from '@/components/SEOHead';
 
 export default function ProductList() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,8 +24,9 @@ export default function ProductList() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex gap-8">
-        <aside className="w-64 flex-shrink-0">
+      <SEOHead title="Products" description="Browse our collection of products" />
+      <div className="flex flex-col md:flex-row gap-8">
+        <aside className="w-full md:w-64 flex-shrink-0">
           <h3 className="font-bold mb-4">Categories</h3>
           <ul className="space-y-2">
             <li>

@@ -28,7 +28,7 @@ export default function Cart() {
             {items.map((item: any) => {
               const price = item.variant ? Number(item.variant.marketplacePrice) : Number(item.product.marketplacePrice);
               return (
-                <div key={item.id} className="bg-white rounded-lg p-4 flex gap-4">
+                <div key={item.id} className="bg-white rounded-lg p-4 flex flex-col md:flex-row gap-4">
                   <div className="w-20 h-20 bg-gray-200 rounded flex-shrink-0 flex items-center justify-center">
                     {item.product.media?.[0]?.url ? (
                       <img src={item.product.media[0].url} alt="" className="w-full h-full object-cover rounded" />

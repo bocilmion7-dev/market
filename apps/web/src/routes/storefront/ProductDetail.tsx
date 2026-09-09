@@ -1,17 +1,29 @@
 import { useParams, Link } from 'react-router-dom';
 import { useProductBySlug } from '@/features/storefront/hooks';
+import { useAddToWishlist, useRemoveFromWishlist, useWishlist } from '@/features/wishlist/hooks';
+import SEOHead from '@/components/SEOHead';
 
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
   const { data: product, isLoading } = useProductBySlug(slug || '');
+  const { data: wishlist } = useWishlist();
+  const addToWishlist = useAddToWishlist();
+  const removeFromWishlist = useRemoveFromWishlist();
 
   if (isLoading) return <div className="max-w-7xl mx-auto px-4 py-12 text-center">Loading...</div>;
   if (!product) return <div className="max-w-7xl mx-auto px-4 py-12 text-center text-gray-500">Product not found</div>;
 
+  const isWishlisted = wishlist?.some((w: any) => w.productId === product.id);
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex gap-8">
-        <div className="w-1/2">
+      <SEOHead
+        title={product.name}
+        description={product.description?.substring(0, 160)}
+        image={product.media?.[0]?.url}
+      />
+      <div className="flex flex-col md:flex-row gap-8">
+        <div className="w-full md:w-1/2">
           <div className="bg-white rounded-lg overflow-hidden aspect-square flex items-center justify-center">
             {product.media?.[0]?.url ? (
               <img src={product.media[0].url} alt={product.name} className="w-full h-full object-cover" />
@@ -30,7 +42,7 @@ export default function ProductDetail() {
           )}
         </div>
 
-        <div className="w-1/2">
+        <div className="w-full md:w-1/2">
           <p className="text-sm text-gray-500 mb-2">
             <Link to={`/products?categoryId=${product.category?.id}`} className="hover:text-brand-accent">{product.category?.name}</Link>
             {product.brand && <span> · {product.brand.name}</span>}
@@ -79,9 +91,17 @@ export default function ProductDetail() {
             )}
           </div>
 
-          <button disabled={product.stock <= 0} className="w-full bg-brand-accent text-white py-3 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-brand-accent-dark transition-colors">
-            {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
-          </button>
+          <div className="flex gap-2 mt-4">
+            <button disabled={product.stock <= 0} className="flex-1 bg-brand-accent text-white py-3 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-brand-accent-dark transition-colors">
+              {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+            </button>
+            <button
+              onClick={() => isWishlisted ? removeFromWishlist.mutate(product.id) : addToWishlist.mutate(product.id)}
+              className="border px-4 py-3 rounded-lg hover:bg-gray-50"
+            >
+              {isWishlisted ? '♥ Wishlisted' : '♡ Add to Wishlist'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -95,7 +115,7 @@ export default function ProductDetail() {
       {product.relatedProducts?.length > 0 && (
         <div className="mt-12">
           <h2 className="text-xl font-bold mb-4">Related Products</h2>
-          <div className="grid grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {product.relatedProducts.map((rp: any) => (
               <Link key={rp.id} to={`/products/${rp.slug}`} className="bg-white rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                 <div className="h-40 bg-gray-200 flex items-center justify-center">
