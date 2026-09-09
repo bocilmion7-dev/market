@@ -14,6 +14,8 @@ import publisherProductRoutes from './routes/publisher/products';
 import storefrontRoutes from './routes/storefront';
 import cartRoutes from './routes/cart';
 import orderRoutes from './routes/orders';
+import paymentRoutes from './routes/payment';
+import shippingRoutes from './routes/shipping';
 
 const app = express();
 
@@ -38,6 +40,8 @@ app.use('/api/publisher/products', publisherProductRoutes);
 
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/payment', paymentRoutes);
+app.use('/api/shipping', shippingRoutes);
 
 app.use('/api', storefrontRoutes);
 

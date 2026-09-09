@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart, useCreateOrder } from '@/features/cart/hooks';
+import { useInitiatePayment } from '@/features/payment/hooks';
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { data: items } = useCart();
   const createOrder = useCreateOrder();
+  const initiatePayment = useInitiatePayment();
 
   const [shippingAddress, setShippingAddress] = useState('');
   const [notes, setNotes] = useState('');
@@ -23,7 +25,14 @@ export default function Checkout() {
       shippingCourier: 'jne',
       notes,
     }, {
-      onSuccess: (data) => navigate(`/orders/${data.order.id}`),
+      onSuccess: (data) => {
+        const orderId = data.order.id;
+        initiatePayment.mutate(orderId, {
+          onSuccess: (paymentData) => {
+            window.location.href = paymentData.redirect_url;
+          },
+        });
+      },
     });
   };
 
@@ -68,10 +77,10 @@ export default function Checkout() {
 
           <button
             onClick={handleCheckout}
-            disabled={!shippingAddress || createOrder.isPending}
+            disabled={!shippingAddress || createOrder.isPending || initiatePayment.isPending}
             className="w-full bg-brand-accent text-white py-3 rounded-lg font-semibold mt-4 disabled:opacity-50"
           >
-            {createOrder.isPending ? 'Processing...' : 'Place Order'}
+            {initiatePayment.isPending ? 'Redirecting to Payment...' : createOrder.isPending ? 'Creating Order...' : 'Place Order & Pay'}
           </button>
         </div>
       </div>
