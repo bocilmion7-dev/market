@@ -8,6 +8,7 @@ import AdminUsers from '@/routes/admin/Users';
 import AdminCategories from '@/routes/admin/Categories';
 import AdminBrands from '@/routes/admin/Brands';
 import AdminSettings from '@/routes/admin/Settings';
+import FormBuilderPage from '@/routes/admin/FormBuilder';
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,8 @@ function App() {
             <Route path="categories" element={<AdminCategories />} />
             <Route path="brands" element={<AdminBrands />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="form-builder" element={<FormBuilderPage />} />
+            <Route path="form-builder/:id" element={<FormBuilderPage />} />
           </Route>
           <Route
             path="/publisher"

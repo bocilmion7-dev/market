@@ -8,6 +8,7 @@ const navItems = [
   { label: 'Categories', path: '/admin/categories' },
   { label: 'Brands', path: '/admin/brands' },
   { label: 'Settings', path: '/admin/settings' },
+  { label: 'Form Builder', path: '/admin/form-builder' },
 ];
 
 export default function AdminLayout() {
