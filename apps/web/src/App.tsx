@@ -2,6 +2,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Login from '@/routes/auth/Login';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import AdminLayout from '@/components/layout/AdminLayout';
+import AdminDashboard from '@/routes/admin/Dashboard';
+import AdminUsers from '@/routes/admin/Users';
+import AdminCategories from '@/routes/admin/Categories';
+import AdminBrands from '@/routes/admin/Brands';
+import AdminSettings from '@/routes/admin/Settings';
 
 const queryClient = new QueryClient();
 
@@ -15,10 +21,16 @@ function App() {
             path="/admin"
             element={
               <ProtectedRoute allowedRoles={['ADMIN_MAKER']}>
-                <div className="p-4"><h1>Admin Dashboard</h1></div>
+                <AdminLayout />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="categories" element={<AdminCategories />} />
+            <Route path="brands" element={<AdminBrands />} />
+            <Route path="settings" element={<AdminSettings />} />
+          </Route>
           <Route
             path="/publisher"
             element={
