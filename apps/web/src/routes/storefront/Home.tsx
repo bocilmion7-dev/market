@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useHomepage } from '@/features/storefront/hooks';
 import SEOHead from '@/components/SEOHead';
+import { Skeleton } from '@/components/ui';
 
 export default function Home() {
   const { data, isLoading } = useHomepage();
@@ -8,51 +9,75 @@ export default function Home() {
   return (
     <div>
       <SEOHead title="Home" description="Discover products from multiple publishers at great prices" />
-      <section className="bg-gradient-to-r from-brand-dark to-brand-accent text-white py-16">
+      
+      <section className="bg-gradient-to-r from-brand-dark to-brand-accent text-white py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-2xl md:text-4xl font-bold mb-4">Welcome to Marketplace</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">Welcome to Marketplace</h1>
           <p className="text-lg mb-8 text-gray-200">Discover products from multiple publishers</p>
-          <Link to="/products" className="bg-white text-brand-dark px-8 py-3 rounded-lg font-semibold hover:bg-gray-100">
+          <Link
+            to="/products"
+            className="inline-block bg-white text-brand-dark px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 active:scale-[0.98] transition-all"
+          >
             Browse Products
           </Link>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold mb-6">Categories</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {data?.categories?.map((cat: any) => (
-            <Link key={cat.id} to={`/products?categoryId=${cat.id}`} className="bg-white rounded-lg p-4 text-center hover:shadow-md transition-shadow">
-              <p className="font-medium">{cat.name}</p>
-            </Link>
-          ))}
+      <section className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+        <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Categories</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          {isLoading ? (
+            Array(4).fill(0).map((_, i) => (
+              <Skeleton key={i} className="h-20 rounded-lg" />
+            ))
+          ) : (
+            data?.categories?.map((cat: any) => (
+              <Link
+                key={cat.id}
+                to={`/products?categoryId=${cat.id}`}
+                className="bg-[rgb(var(--bg-primary))] rounded-lg p-4 text-center hover:shadow-md transition-shadow touch-target"
+              >
+                <p className="font-medium text-sm md:text-base">{cat.name}</p>
+              </Link>
+            ))
+          )}
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Latest Products</h2>
-          <Link to="/products" className="text-brand-accent hover:underline">View All →</Link>
+      <section className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+        <div className="flex justify-between items-center mb-4 md:mb-6">
+          <h2 className="text-xl md:text-2xl font-bold">Latest Products</h2>
+          <Link to="/products" className="text-brand-accent hover:underline text-sm md:text-base">View All →</Link>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {isLoading ? (
             Array(4).fill(0).map((_, i) => (
-              <div key={i} className="bg-white rounded-lg h-64 animate-pulse" />
+              <div key={i} className="space-y-3">
+                <Skeleton className="h-40 md:h-48 rounded-lg" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
             ))
           ) : (
             data?.featuredProducts?.map((product: any) => (
-              <Link key={product.id} to={`/products/${product.slug}`} className="bg-white rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
+              <Link
+                key={product.id}
+                to={`/products/${product.slug}`}
+                className="bg-[rgb(var(--bg-primary))] rounded-lg overflow-hidden hover:shadow-md transition-shadow"
+              >
+                <div className="h-32 md:h-48 bg-[rgb(var(--bg-tertiary))] flex items-center justify-center">
                   {product.media?.[0]?.url ? (
                     <img src={product.media[0].url} alt={product.name} className="h-full w-full object-cover" />
                   ) : (
-                    <span className="text-gray-400">No Image</span>
+                    <span className="text-[rgb(var(--text-muted))] text-sm">No Image</span>
                   )}
                 </div>
-                <div className="p-4">
-                  <p className="text-sm text-gray-500">{product.category?.name}</p>
-                  <p className="font-medium truncate">{product.name}</p>
-                  <p className="text-brand-accent font-bold mt-1">Rp {Number(product.marketplacePrice).toLocaleString()}</p>
+                <div className="p-3 md:p-4">
+                  <p className="text-xs text-[rgb(var(--text-muted))]">{product.category?.name}</p>
+                  <p className="font-medium truncate text-sm md:text-base">{product.name}</p>
+                  <p className="text-brand-accent font-bold mt-1 text-sm md:text-base">
+                    Rp {Number(product.marketplacePrice).toLocaleString()}
+                  </p>
                 </div>
               </Link>
             ))
