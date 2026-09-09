@@ -19,7 +19,7 @@ interface UIState {
 export const useUIStore = create<UIState>((set) => ({
   drawerOpen: false,
   toasts: [],
-  theme: 'system',
+  theme: 'dark',
   setDrawerOpen: (open) => set({ drawerOpen: open }),
   addToast: (message, type) => {
     const id = Math.random().toString(36).slice(2);

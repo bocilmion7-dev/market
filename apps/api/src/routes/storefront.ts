@@ -6,12 +6,9 @@ const router = Router();
 
 router.get('/homepage', async (req, res, next) => {
   try {
-    const [featuredProducts, categories, banners] = await Promise.all([
-      storefrontService.getHomepage(),
-      storefrontService.getCategories(),
-      getPublicBanners(),
-    ]);
-    res.json({ success: true, data: { ...featuredProducts, categories, banners } });
+    const homepage = await storefrontService.getHomepage();
+    const banners = await getPublicBanners();
+    res.json({ success: true, data: { ...homepage, banners } });
   } catch (err) { next(err); }
 });
 

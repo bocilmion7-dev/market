@@ -31,7 +31,7 @@ function BannerSlider({ banners }: { banners: any[] }) {
 
   const banner = banners[current];
   const content = (
-    <div className="relative w-full h-40 md:h-56 overflow-hidden rounded-lg">
+    <div className="relative w-full h-40 md:h-56 overflow-hidden">
       {banner.imageUrl ? (
         <img src={banner.imageUrl} alt={banner.title} className="w-full h-full object-cover" />
       ) : (
@@ -69,13 +69,13 @@ export default function Home() {
     <div>
       <SEOHead title="Home" description="Discover products from multiple publishers at great prices" />
 
-      <section className="max-w-7xl mx-auto px-4 py-4 md:py-6">
+      <section>
         {isLoading ? (
-          <Skeleton className="h-40 md:h-56 rounded-lg" />
+          <Skeleton className="h-40 md:h-56" />
         ) : data?.banners?.length > 0 ? (
           <BannerSlider banners={data.banners} />
         ) : (
-          <div className="bg-gradient-to-r from-brand-dark to-brand-accent text-white py-10 md:py-14 rounded-lg text-center">
+          <div className="bg-gradient-to-r from-brand-dark to-brand-accent text-white py-10 md:py-14 text-center">
             <h1 className="text-2xl md:text-3xl font-bold mb-2">Welcome to Marketplace</h1>
             <p className="text-gray-200">Discover products from multiple publishers</p>
           </div>

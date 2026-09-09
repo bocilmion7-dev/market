@@ -2,9 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useProductBySlug } from '@/features/storefront/hooks';
 import { useAddToWishlist, useRemoveFromWishlist, useWishlist } from '@/features/wishlist/hooks';
 import { useAddToCart } from '@/features/cart/hooks';
-import { useIsMobile } from '@/hooks/useMediaQuery';
 import { useAuthStore } from '@/stores/auth';
-import { useBottomTabBarVisible } from '@/components/layout/BottomTabBar';
 import SEOHead from '@/components/SEOHead';
 import { Skeleton, Badge, Button } from '@/components/ui';
 import { useState } from 'react';
@@ -16,10 +14,8 @@ export default function ProductDetail() {
   const addToWishlist = useAddToWishlist();
   const removeFromWishlist = useRemoveFromWishlist();
   const addToCart = useAddToCart();
-  const isMobile = useIsMobile();
   const [selectedImage, setSelectedImage] = useState(0);
   const user = useAuthStore((s) => s.user);
-  const tabBarVisible = useBottomTabBarVisible();
 
   if (isLoading) {
     return (
@@ -51,19 +47,12 @@ export default function ProductDetail() {
   };
 
   const handleWishlist = () => {
-    if (!user) {
-      window.location.href = '/login';
-      return;
-    }
-    if (isWishlisted) {
-      removeFromWishlist.mutate(product.id);
-    } else {
-      addToWishlist.mutate(product.id);
-    }
+    if (!user) { window.location.href = '/login'; return; }
+    isWishlisted ? removeFromWishlist.mutate(product.id) : addToWishlist.mutate(product.id);
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6 md:py-8 pb-24 md:pb-8">
+    <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
       <SEOHead title={product.name} description={product.description?.substring(0, 160)} image={product.media?.[0]?.url} />
 
       <div className="flex flex-col md:flex-row gap-6 md:gap-8">
@@ -135,7 +124,7 @@ export default function ProductDetail() {
             )}
           </div>
 
-          <div className="hidden md:flex gap-2 mt-4">
+          <div className="flex gap-2 mt-4">
             <Button disabled={product.stock <= 0 || addToCart.isPending} className="flex-1" onClick={handleAddToCart}>
               {addToCart.isPending ? 'Adding...' : product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
             </Button>
@@ -166,23 +155,6 @@ export default function ProductDetail() {
                 </div>
               </Link>
             ))}
-          </div>
-        </div>
-      )}
-
-      {isMobile && (
-        <div
-          className="fixed left-0 right-0 bg-[rgb(var(--bg-primary))] border-t border-[rgb(var(--border))] p-4 z-30 transition-all duration-300"
-          style={{ bottom: tabBarVisible ? '5rem' : '0' }}
-        >
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <p className="text-xs text-[rgb(var(--text-muted))]">Total</p>
-              <p className="text-lg font-bold text-brand-accent">Rp {Number(product.marketplacePrice).toLocaleString()}</p>
-            </div>
-            <Button disabled={product.stock <= 0 || addToCart.isPending} className="flex-1" onClick={handleAddToCart}>
-              {addToCart.isPending ? 'Adding...' : 'Add to Cart'}
-            </Button>
           </div>
         </div>
       )}
