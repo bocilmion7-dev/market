@@ -2,6 +2,9 @@ import { useParams, Link } from 'react-router-dom';
 import { useProductBySlug } from '@/features/storefront/hooks';
 import { useAddToWishlist, useRemoveFromWishlist, useWishlist } from '@/features/wishlist/hooks';
 import SEOHead from '@/components/SEOHead';
+import { Skeleton, Badge, Button } from '@/components/ui';
+import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useState } from 'react';
 
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -9,82 +12,120 @@ export default function ProductDetail() {
   const { data: wishlist } = useWishlist();
   const addToWishlist = useAddToWishlist();
   const removeFromWishlist = useRemoveFromWishlist();
+  const isMobile = useIsMobile();
+  const [selectedImage, setSelectedImage] = useState(0);
 
-  if (isLoading) return <div className="max-w-7xl mx-auto px-4 py-12 text-center">Loading...</div>;
-  if (!product) return <div className="max-w-7xl mx-auto px-4 py-12 text-center text-gray-500">Product not found</div>;
+  if (isLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row gap-8">
+          <div className="w-full md:w-1/2">
+            <Skeleton className="aspect-square rounded-lg" />
+          </div>
+          <div className="w-full md:w-1/2 space-y-4">
+            <Skeleton className="h-4 w-1/4" />
+            <Skeleton className="h-8 w-3/4" />
+            <Skeleton className="h-6 w-1/3" />
+            <Skeleton className="h-20" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-12 text-center">
+        <h1 className="text-2xl font-bold mb-2">Product not found</h1>
+        <p className="text-[rgb(var(--text-muted))] mb-4">This product doesn't exist or was removed.</p>
+        <Link to="/products" className="text-brand-accent hover:underline">Browse Products →</Link>
+      </div>
+    );
+  }
 
   const isWishlisted = Array.isArray(wishlist) && wishlist.some((w: any) => w.productId === product.id);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
       <SEOHead
         title={product.name}
         description={product.description?.substring(0, 160)}
         image={product.media?.[0]?.url}
       />
-      <div className="flex flex-col md:flex-row gap-8">
+      
+      <div className="flex flex-col md:flex-row gap-6 md:gap-8">
         <div className="w-full md:w-1/2">
-          <div className="bg-white rounded-lg overflow-hidden aspect-square flex items-center justify-center">
-            {product.media?.[0]?.url ? (
-              <img src={product.media[0].url} alt={product.name} className="w-full h-full object-cover" />
+          <div className="bg-[rgb(var(--bg-primary))] rounded-lg overflow-hidden aspect-square flex items-center justify-center">
+            {product.media?.[selectedImage]?.url ? (
+              <img src={product.media[selectedImage].url} alt={product.name} className="w-full h-full object-cover" />
             ) : (
-              <span className="text-gray-400 text-lg">No Image</span>
+              <span className="text-[rgb(var(--text-muted))] text-lg">No Image</span>
             )}
           </div>
           {product.media?.length > 1 && (
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
               {product.media.map((m: any, i: number) => (
-                <div key={i} className="w-16 h-16 bg-white rounded border-2 border-brand-accent overflow-hidden">
+                <button
+                  key={i}
+                  onClick={() => setSelectedImage(i)}
+                  className={`w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 ${
+                    selectedImage === i ? 'border-brand-accent' : 'border-transparent'
+                  }`}
+                >
                   <img src={m.url} alt="" className="w-full h-full object-cover" />
-                </div>
+                </button>
               ))}
             </div>
           )}
         </div>
 
         <div className="w-full md:w-1/2">
-          <p className="text-sm text-gray-500 mb-2">
+          <p className="text-sm text-[rgb(var(--text-muted))] mb-2">
             <Link to={`/products?categoryId=${product.category?.id}`} className="hover:text-brand-accent">{product.category?.name}</Link>
             {product.brand && <span> · {product.brand.name}</span>}
           </p>
-          <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+          <h1 className="text-2xl md:text-3xl font-bold mb-4">{product.name}</h1>
 
           <div className="flex items-center gap-4 mb-4">
-            <span className="text-3xl font-bold text-brand-accent">Rp {Number(product.marketplacePrice).toLocaleString()}</span>
+            <span className="text-2xl md:text-3xl font-bold text-brand-accent">
+              Rp {Number(product.marketplacePrice).toLocaleString()}
+            </span>
             {product.bestPrice !== product.marketplacePrice && (
-              <span className="text-lg text-gray-400 line-through">Rp {Number(product.bestPrice).toLocaleString()}</span>
+              <span className="text-lg text-[rgb(var(--text-muted))] line-through">
+                Rp {Number(product.bestPrice).toLocaleString()}
+              </span>
             )}
           </div>
 
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-4 mb-4">
             <div className="flex items-center gap-1">
               {Array(5).fill(0).map((_, i) => (
                 <span key={i} className={i < Math.round(product.avgRating || 0) ? 'text-yellow-400' : 'text-gray-300'}>★</span>
               ))}
-              <span className="text-sm text-gray-500 ml-1">({product.reviewCount || 0})</span>
+              <span className="text-sm text-[rgb(var(--text-muted))] ml-1">({product.reviewCount || 0})</span>
             </div>
           </div>
 
-          <div className="bg-brand-muted rounded-lg p-4 mb-6">
-            <p className="text-sm text-gray-500">Seller</p>
+          <div className="bg-[rgb(var(--bg-secondary))] rounded-lg p-4 mb-6">
+            <p className="text-sm text-[rgb(var(--text-muted))]">Seller</p>
             <p className="font-medium">{product.publisher?.fullName}</p>
           </div>
 
           <div className="space-y-4 mb-6">
             <div>
-              <p className="text-sm text-gray-500">Stock</p>
-              <p className={product.stock > 0 ? 'text-green-600' : 'text-red-500'}>
+              <p className="text-sm text-[rgb(var(--text-muted))]">Stock</p>
+              <p className={product.stock > 0 ? 'text-semantic-success' : 'text-semantic-error'}>
                 {product.stock > 0 ? `${product.stock} available` : 'Out of stock'}
               </p>
             </div>
             {product.variants?.length > 0 && (
               <div>
-                <p className="text-sm text-gray-500 mb-2">Variants ({product.variants.length})</p>
+                <p className="text-sm text-[rgb(var(--text-muted))] mb-2">Variants ({product.variants.length})</p>
                 <div className="flex flex-wrap gap-2">
                   {product.variants.map((v: any) => (
-                    <span key={v.id} className="px-3 py-1 bg-white border rounded-full text-sm">
+                    <Badge key={v.id} variant="default">
                       {Object.values(v.variantFormData).join(' / ')} — Rp {Number(v.marketplacePrice).toLocaleString()}
-                    </span>
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -92,34 +133,41 @@ export default function ProductDetail() {
           </div>
 
           <div className="flex gap-2 mt-4">
-            <button disabled={product.stock <= 0} className="flex-1 bg-brand-accent text-white py-3 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-brand-accent-dark transition-colors">
-              {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
-            </button>
-            <button
-              onClick={() => isWishlisted ? removeFromWishlist.mutate(product.id) : addToWishlist.mutate(product.id)}
-              className="border px-4 py-3 rounded-lg hover:bg-gray-50"
+            <Button
+              disabled={product.stock <= 0}
+              className="flex-1"
             >
-              {isWishlisted ? '♥ Wishlisted' : '♡ Add to Wishlist'}
-            </button>
+              {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => isWishlisted ? removeFromWishlist.mutate(product.id) : addToWishlist.mutate(product.id)}
+            >
+              {isWishlisted ? '♥' : '♡'}
+            </Button>
           </div>
         </div>
       </div>
 
-      <div className="mt-12">
+      <div className="mt-8 md:mt-12">
         <h2 className="text-xl font-bold mb-4">Description</h2>
-        <div className="bg-white rounded-lg p-6 prose max-w-none">
+        <div className="bg-[rgb(var(--bg-primary))] rounded-lg p-4 md:p-6 prose max-w-none text-sm md:text-base">
           {product.description}
         </div>
       </div>
 
       {product.relatedProducts?.length > 0 && (
-        <div className="mt-12">
+        <div className="mt-8 md:mt-12">
           <h2 className="text-xl font-bold mb-4">Related Products</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="flex md:grid md:grid-cols-4 gap-4 overflow-x-auto pb-4 -mx-4 px-4">
             {product.relatedProducts.map((rp: any) => (
-              <Link key={rp.id} to={`/products/${rp.slug}`} className="bg-white rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                <div className="h-40 bg-gray-200 flex items-center justify-center">
-                  {rp.media?.[0]?.url ? <img src={rp.media[0].url} alt="" className="h-full w-full object-cover" /> : <span className="text-gray-400">No Image</span>}
+              <Link
+                key={rp.id}
+                to={`/products/${rp.slug}`}
+                className="bg-[rgb(var(--bg-primary))] rounded-lg overflow-hidden hover:shadow-md transition-shadow flex-shrink-0 w-40 md:w-auto"
+              >
+                <div className="h-32 md:h-40 bg-[rgb(var(--bg-tertiary))] flex items-center justify-center">
+                  {rp.media?.[0]?.url ? <img src={rp.media[0].url} alt="" className="h-full w-full object-cover" /> : <span className="text-[rgb(var(--text-muted))] text-sm">No Image</span>}
                 </div>
                 <div className="p-3">
                   <p className="font-medium text-sm truncate">{rp.name}</p>
@@ -127,6 +175,20 @@ export default function ProductDetail() {
                 </div>
               </Link>
             ))}
+          </div>
+        </div>
+      )}
+
+      {isMobile && (
+        <div className="fixed bottom-16 left-0 right-0 bg-[rgb(var(--bg-primary))] border-t border-[rgb(var(--border))] p-4 z-30">
+          <div className="flex items-center gap-4">
+            <div className="flex-1">
+              <p className="text-xs text-[rgb(var(--text-muted))]">Total</p>
+              <p className="text-lg font-bold text-brand-accent">Rp {Number(product.marketplacePrice).toLocaleString()}</p>
+            </div>
+            <Button disabled={product.stock <= 0} className="flex-1">
+              Add to Cart
+            </Button>
           </div>
         </div>
       )}
