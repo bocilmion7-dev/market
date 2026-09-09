@@ -25,6 +25,7 @@ import ProductDetail from '@/routes/storefront/ProductDetail';
 import Cart from '@/routes/storefront/Cart';
 import Checkout from '@/routes/storefront/Checkout';
 import WriteReview from '@/routes/storefront/WriteReview';
+import ToastContainer from '@/components/ui/Toast';
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <ToastContainer />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route

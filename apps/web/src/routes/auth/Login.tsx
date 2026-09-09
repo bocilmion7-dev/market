@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLogin } from '@/features/auth/hooks';
+import { Button, Input } from '@/components/ui';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -7,49 +8,43 @@ export default function Login() {
   const login = useLogin();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-brand-dark">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-center mb-6">Marketplace Login</h1>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            login.mutate({ email, password });
-          }}
-          className="space-y-4"
-        >
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
-            <input
-              id="email"
+    <div className="min-h-[100dvh] flex items-center justify-center bg-[rgb(var(--bg-primary))] px-4">
+      <div className="w-full max-w-md">
+        <div className="bg-[rgb(var(--bg-primary))] rounded-xl shadow-lg p-6 md:p-8">
+          <h1 className="text-2xl font-bold text-center mb-6">Marketplace Login</h1>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              login.mutate({ email, password });
+            }}
+            className="space-y-4"
+          >
+            <Input
+              label="Email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-accent"
               required
             />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">Password</label>
-            <input
-              id="password"
+            <Input
+              label="Password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-accent"
               required
             />
-          </div>
-          {login.isError && (
-            <p className="text-red-500 text-sm">{(login.error as Error)?.message}</p>
-          )}
-          <button
-            type="submit"
-            disabled={login.isPending}
-            className="w-full bg-brand-accent text-white py-2 rounded-lg font-medium hover:bg-brand-accent-dark disabled:opacity-50"
-          >
-            {login.isPending ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
+            {login.isError && (
+              <p className="text-semantic-error text-sm">{(login.error as Error)?.message}</p>
+            )}
+            <Button
+              type="submit"
+              loading={login.isPending}
+              className="w-full"
+            >
+              Sign In
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );
