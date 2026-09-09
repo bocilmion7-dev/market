@@ -1,5 +1,14 @@
 import { prisma } from '../lib/prisma';
 
+export interface Banner {
+  id: string;
+  title: string;
+  subtitle?: string;
+  imageUrl: string;
+  link?: string;
+  active: boolean;
+}
+
 export async function getSettings() {
   const settings = await prisma.setting.findMany();
   return settings.reduce((acc, s) => ({ ...acc, [s.key]: s.value }), {} as Record<string, any>);
@@ -16,4 +25,24 @@ export async function updateAdminFee(percentage: number, updatedBy: string) {
     update: { value: { percentage }, updatedBy },
     create: { key: 'admin_fee_percentage', value: { percentage }, updatedBy },
   });
+}
+
+export async function getBanners(): Promise<Banner[]> {
+  const setting = await prisma.setting.findUnique({ where: { key: 'home_banners' } });
+  return (setting?.value as any)?.banners || [];
+}
+
+export async function updateBanners(banners: Banner[], updatedBy: string) {
+  const limited = banners.slice(0, 5);
+  return prisma.setting.upsert({
+    where: { key: 'home_banners' },
+    update: { value: { banners: limited }, updatedBy },
+    create: { key: 'home_banners', value: { banners: limited }, updatedBy },
+  });
+}
+
+export async function getPublicBanners(): Promise<Banner[]> {
+  const setting = await prisma.setting.findUnique({ where: { key: 'home_banners' } });
+  const all = (setting?.value as any)?.banners || [];
+  return all.filter((b: Banner) => b.active);
 }

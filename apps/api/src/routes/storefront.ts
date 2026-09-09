@@ -1,12 +1,17 @@
 import { Router } from 'express';
 import * as storefrontService from '../services/storefront.service';
+import { getPublicBanners } from '../services/settings.service';
 
 const router = Router();
 
 router.get('/homepage', async (req, res, next) => {
   try {
-    const data = await storefrontService.getHomepage();
-    res.json({ success: true, data });
+    const [featuredProducts, categories, banners] = await Promise.all([
+      storefrontService.getHomepage(),
+      storefrontService.getCategories(),
+      getPublicBanners(),
+    ]);
+    res.json({ success: true, data: { ...featuredProducts, categories, banners } });
   } catch (err) { next(err); }
 });
 

@@ -161,3 +161,19 @@ export function useUpdateAdminFee() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'settings'] }),
   });
 }
+
+// Banners
+export function useBanners() {
+  return useQuery({
+    queryKey: ['admin', 'banners'],
+    queryFn: () => api.get<any[]>('/admin/banners'),
+  });
+}
+
+export function useUpdateBanners() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (banners: any[]) => api.put('/admin/banners', { banners }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'banners'] }),
+  });
+}

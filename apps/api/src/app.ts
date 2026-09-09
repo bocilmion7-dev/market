@@ -21,6 +21,7 @@ import notificationRoutes from './routes/notifications';
 import reviewRoutes from './routes/reviews';
 import wishlistRoutes from './routes/wishlist';
 import adminReportRoutes from './routes/admin/reports';
+import adminBannerRoutes from './routes/admin/banners';
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 
 app.use('/api/admin', adminReportRoutes);
+app.use('/api/admin/banners', adminBannerRoutes);
 
 app.use('/api', storefrontRoutes);
 
