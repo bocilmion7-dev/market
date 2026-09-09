@@ -177,3 +177,27 @@ export function useUpdateBanners() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'banners'] }),
   });
 }
+
+// Site Settings
+export function useSiteSettings() {
+  return useQuery({
+    queryKey: ['site-settings'],
+    queryFn: () => api.get<{ siteName: string; siteFooter: any }>('/site-settings'),
+  });
+}
+
+export function useUpdateSiteName() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (name: string) => api.put('/admin/settings/site-name', { name }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['site-settings'] }),
+  });
+}
+
+export function useUpdateSiteFooter() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (footer: any) => api.put('/admin/settings/site-footer', footer),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['site-settings'] }),
+  });
+}

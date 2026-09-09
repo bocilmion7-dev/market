@@ -28,7 +28,7 @@ export default function PublisherLayout() {
           <div className="flex items-center justify-between h-14 px-4">
             <button
               onClick={() => setDrawerOpen(true)}
-              className="p-2 -ml-2 hover:bg-[rgb(var(--bg-tertiary))] rounded-lg touch-target"
+              className="p-2 -ml-2 hover:bg-[rgb(var(--bg-tertiary))] touch-target"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -57,7 +57,7 @@ export default function PublisherLayout() {
             <Link
               key={item.path}
               to={item.path}
-              className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
+              className={`block px-3 py-2 text-sm transition-colors ${
                 location.pathname === item.path || (item.path !== '/publisher' && location.pathname.startsWith(item.path))
                   ? 'bg-brand-accent text-white'
                   : 'text-[rgb(var(--text-secondary))] hover:bg-[rgb(var(--bg-tertiary))]'

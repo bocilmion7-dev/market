@@ -27,7 +27,7 @@ export default function Badge({ variant = 'default', size = 'sm', className, chi
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full font-medium',
+        'inline-flex items-center font-medium',
         variantStyles[variant],
         sizeStyles[size],
         className

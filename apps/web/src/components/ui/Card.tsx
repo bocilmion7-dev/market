@@ -28,7 +28,7 @@ export default function Card({ variant = 'elevated', padding = 'md', className, 
     <div
       onClick={onClick}
       className={cn(
-        'rounded-lg',
+        '',
         variantStyles[variant],
         paddingStyles[padding],
         onClick && 'cursor-pointer hover:shadow-lg transition-shadow duration-150',

@@ -28,7 +28,7 @@ export default function PublisherOrderDetail() {
           <Link to="/publisher/orders" className="text-sm text-gray-500 hover:text-brand-accent">&larr; Back to Orders</Link>
           <h1 className="text-2xl font-bold mt-2">Order {order.orderNumber}</h1>
         </div>
-        <span className={`px-3 py-1 rounded text-sm ${
+        <span className={`px-3 py-1 text-sm ${
           order.orderStatus === 'PAID' ? 'bg-blue-100 text-blue-700' :
           order.orderStatus === 'SHIPPED' ? 'bg-purple-100 text-purple-700' :
           order.orderStatus === 'COMPLETED' ? 'bg-green-100 text-green-700' :
@@ -39,13 +39,13 @@ export default function PublisherOrderDetail() {
 
       <div className="grid grid-cols-2 gap-6">
         <div className="space-y-6">
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white p-4">
             <h3 className="font-bold mb-3">Customer</h3>
             <p className="text-sm">{order.customerName || order.customer?.name}</p>
             <p className="text-sm text-gray-500">{order.customerEmail || order.customer?.email}</p>
           </div>
 
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white p-4">
             <h3 className="font-bold mb-3">Items</h3>
             {order.items?.map((item: any) => (
               <div key={item.id} className="flex justify-between text-sm py-2 border-b last:border-0">
@@ -55,7 +55,7 @@ export default function PublisherOrderDetail() {
             ))}
           </div>
 
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white p-4">
             <h3 className="font-bold mb-3">Shipping</h3>
             <p className="text-sm text-gray-600">{order.shippingAddress?.fullAddress || '—'}</p>
             {order.shipment && (
@@ -65,14 +65,14 @@ export default function PublisherOrderDetail() {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white p-4">
             <h3 className="font-bold mb-3">AWB Number</h3>
             {order.shipment?.awb ? (
               <p className="text-lg font-mono text-brand-accent">{order.shipment.awb}</p>
             ) : order.orderStatus === 'PAID' || order.orderStatus === 'PROCESSING' ? (
               <div className="flex gap-2">
-                <input value={awbNumber} onChange={(e) => setAwbNumber(e.target.value)} placeholder="Enter AWB number" className="flex-1 border rounded px-3 py-2 text-sm" />
-                <button onClick={handleAddAWB} disabled={!awbNumber} className="bg-brand-accent text-white px-4 py-2 rounded text-sm disabled:opacity-50">
+                <input value={awbNumber} onChange={(e) => setAwbNumber(e.target.value)} placeholder="Enter AWB number" className="flex-1 border px-3 py-2 text-sm" />
+                <button onClick={handleAddAWB} disabled={!awbNumber} className="bg-brand-accent text-white px-4 py-2 text-sm disabled:opacity-50">
                   Add
                 </button>
               </div>
@@ -81,29 +81,29 @@ export default function PublisherOrderDetail() {
             )}
           </div>
 
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white p-4">
             <h3 className="font-bold mb-3">Actions</h3>
             <div className="space-y-2">
               {order.orderStatus === 'PAID' && (
-                <button onClick={() => handleStatusUpdate('PROCESSING')} className="w-full bg-blue-500 text-white py-2 rounded text-sm">Mark as Processing</button>
+                <button onClick={() => handleStatusUpdate('PROCESSING')} className="w-full bg-blue-500 text-white py-2 text-sm">Mark as Processing</button>
               )}
               {order.orderStatus === 'PROCESSING' && (
-                <button onClick={() => handleStatusUpdate('SHIPPED')} className="w-full bg-purple-500 text-white py-2 rounded text-sm">Mark as Shipped</button>
+                <button onClick={() => handleStatusUpdate('SHIPPED')} className="w-full bg-purple-500 text-white py-2 text-sm">Mark as Shipped</button>
               )}
               {order.orderStatus === 'SHIPPED' && (
-                <button onClick={() => handleStatusUpdate('DELIVERED')} className="w-full bg-green-500 text-white py-2 rounded text-sm">Mark as Delivered</button>
+                <button onClick={() => handleStatusUpdate('DELIVERED')} className="w-full bg-green-500 text-white py-2 text-sm">Mark as Delivered</button>
               )}
               {order.orderStatus === 'DELIVERED' && (
-                <button onClick={() => handleStatusUpdate('COMPLETED')} className="w-full bg-green-600 text-white py-2 rounded text-sm">Mark as Completed</button>
+                <button onClick={() => handleStatusUpdate('COMPLETED')} className="w-full bg-green-600 text-white py-2 text-sm">Mark as Completed</button>
               )}
             </div>
           </div>
 
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white p-4">
             <h3 className="font-bold mb-3">Payment</h3>
             {order.payment ? (
               <div className="text-sm">
-                <span className={`px-2 py-1 rounded text-xs ${order.payment.status === 'PAID' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{order.payment.status}</span>
+                <span className={`px-2 py-1 text-xs ${order.payment.status === 'PAID' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{order.payment.status}</span>
                 <span className="ml-2">Rp {Number(order.payment.amount).toLocaleString()}</span>
               </div>
             ) : (

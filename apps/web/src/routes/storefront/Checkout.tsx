@@ -62,7 +62,7 @@ export default function Checkout() {
 
         <div>
           <h2 className="font-bold mb-4">Order Summary</h2>
-          <div className="bg-[rgb(var(--bg-primary))] rounded-lg p-4 space-y-3">
+          <div className="bg-[rgb(var(--bg-primary))] p-4 space-y-3">
             {items?.map((item: any) => (
               <div key={item.id} className="flex justify-between text-sm">
                 <span className="truncate flex-1 mr-2">{item.product.name} × {item.quantity}</span>

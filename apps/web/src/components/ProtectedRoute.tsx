@@ -14,7 +14,7 @@ export default function ProtectedRoute({
   const authLoading = useAuthStore((s) => s.isLoading);
 
   if (isLoading || authLoading) {
-    return <div className="flex items-center justify-center min-h-screen"><div className="animate-spin h-8 w-8 border-4 border-brand-accent border-t-transparent rounded-full" /></div>;
+    return <div className="flex items-center justify-center min-h-screen"><div className="animate-spin h-8 w-8 border-4 border-brand-accent border-t-transparent" /></div>;
   }
 
   if (!user) {

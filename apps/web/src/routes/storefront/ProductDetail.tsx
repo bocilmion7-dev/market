@@ -21,7 +21,7 @@ export default function ProductDetail() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row gap-8">
-          <div className="w-full md:w-1/2"><Skeleton className="aspect-square rounded-lg" /></div>
+          <div className="w-full md:w-1/2"><Skeleton className="aspect-square" /></div>
           <div className="w-full md:w-1/2 space-y-4">
             <Skeleton className="h-4 w-1/4" /><Skeleton className="h-8 w-3/4" /><Skeleton className="h-6 w-1/3" /><Skeleton className="h-20" />
           </div>
@@ -57,7 +57,7 @@ export default function ProductDetail() {
 
       <div className="flex flex-col md:flex-row gap-6 md:gap-8">
         <div className="w-full md:w-1/2">
-          <div className="bg-[rgb(var(--bg-primary))] rounded-lg overflow-hidden aspect-square flex items-center justify-center">
+          <div className="bg-[rgb(var(--bg-primary))] overflow-hidden aspect-square flex items-center justify-center">
             {product.media?.[selectedImage]?.url ? (
               <img src={product.media[selectedImage].url} alt={product.name} className="w-full h-full object-cover" />
             ) : (
@@ -67,7 +67,7 @@ export default function ProductDetail() {
           {product.media?.length > 1 && (
             <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
               {product.media.map((m: any, i: number) => (
-                <button key={i} onClick={() => setSelectedImage(i)} className={`w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 ${selectedImage === i ? 'border-brand-accent' : 'border-transparent'}`}>
+                <button key={i} onClick={() => setSelectedImage(i)} className={`w-16 h-16 overflow-hidden flex-shrink-0 border-2 ${selectedImage === i ? 'border-brand-accent' : 'border-transparent'}`}>
                   <img src={m.url} alt="" className="w-full h-full object-cover" />
                 </button>
               ))}
@@ -98,7 +98,7 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          <div className="bg-[rgb(var(--bg-secondary))] rounded-lg p-4 mb-6">
+          <div className="bg-[rgb(var(--bg-secondary))] p-4 mb-6">
             <p className="text-sm text-[rgb(var(--text-muted))]">Seller</p>
             <p className="font-medium">{product.publisher?.fullName}</p>
           </div>
@@ -137,7 +137,7 @@ export default function ProductDetail() {
 
       <div className="mt-8 md:mt-12">
         <h2 className="text-xl font-bold mb-4">Description</h2>
-        <div className="bg-[rgb(var(--bg-primary))] rounded-lg p-4 md:p-6 prose max-w-none text-sm md:text-base">{product.description}</div>
+        <div className="bg-[rgb(var(--bg-primary))] p-4 md:p-6 prose max-w-none text-sm md:text-base">{product.description}</div>
       </div>
 
       {product.relatedProducts?.length > 0 && (
@@ -145,7 +145,7 @@ export default function ProductDetail() {
           <h2 className="text-xl font-bold mb-4">Related Products</h2>
           <div className="flex md:grid md:grid-cols-4 gap-4 overflow-x-auto pb-4 -mx-4 px-4">
             {product.relatedProducts.map((rp: any) => (
-              <Link key={rp.id} to={`/products/${rp.slug}`} className="bg-[rgb(var(--bg-primary))] rounded-lg overflow-hidden hover:shadow-md transition-shadow flex-shrink-0 w-40 md:w-auto">
+              <Link key={rp.id} to={`/products/${rp.slug}`} className="bg-[rgb(var(--bg-primary))] overflow-hidden hover:shadow-md transition-shadow flex-shrink-0 w-40 md:w-auto">
                 <div className="h-32 md:h-40 bg-[rgb(var(--bg-tertiary))] flex items-center justify-center">
                   {rp.media?.[0]?.url ? <img src={rp.media[0].url} alt="" className="h-full w-full object-cover" /> : <span className="text-[rgb(var(--text-muted))] text-sm">No Image</span>}
                 </div>

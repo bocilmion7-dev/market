@@ -13,7 +13,7 @@ interface FieldRendererProps {
 }
 
 export default function FieldRenderer({ field, value, onChange }: FieldRendererProps) {
-  const baseClass = "w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-accent";
+  const baseClass = "w-full border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-accent";
 
   switch (field.fieldType) {
     case 'TEXT':

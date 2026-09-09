@@ -10,7 +10,7 @@ export default function Login() {
   return (
     <div className="min-h-[100dvh] flex items-center justify-center bg-[rgb(var(--bg-primary))] px-4">
       <div className="w-full max-w-md">
-        <div className="bg-[rgb(var(--bg-primary))] rounded-xl shadow-lg p-6 md:p-8">
+        <div className="bg-[rgb(var(--bg-primary))] shadow-lg p-6 md:p-8">
           <h1 className="text-2xl font-bold text-center mb-6">Marketplace Login</h1>
           <form
             onSubmit={(e) => {

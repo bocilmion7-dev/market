@@ -37,7 +37,7 @@ export default function Modal({ open, onClose, title, children, className }: Mod
       />
       <div
         className={cn(
-          'relative w-full sm:max-w-md bg-[rgb(var(--bg-primary))] rounded-t-xl sm:rounded-xl',
+          'relative w-full sm:max-w-md bg-[rgb(var(--bg-primary))]',
           'max-h-[85vh] overflow-y-auto animate-slide-in-bottom sm:animate-fade-in',
           className
         )}
@@ -45,7 +45,7 @@ export default function Modal({ open, onClose, title, children, className }: Mod
         {title && (
           <div className="flex items-center justify-between p-4 border-b border-[rgb(var(--border))]">
             <h2 className="text-lg font-semibold">{title}</h2>
-            <button onClick={onClose} className="p-2 hover:bg-[rgb(var(--bg-tertiary))] rounded-lg touch-target">
+            <button onClick={onClose} className="p-2 hover:bg-[rgb(var(--bg-tertiary))] touch-target">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>

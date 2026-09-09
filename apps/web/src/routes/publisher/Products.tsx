@@ -10,12 +10,12 @@ export default function PublisherProducts() {
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">My Products</h1>
-        <Link to="/publisher/products/new" className="bg-brand-accent text-white px-4 py-2 rounded-lg hover:bg-brand-accent-dark">
+        <Link to="/publisher/products/new" className="bg-brand-accent text-white px-4 py-2 hover:bg-brand-accent-dark">
           Add Product
         </Link>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white shadow overflow-hidden">
         <table className="w-full">
           <thead className="bg-brand-dark text-white">
             <tr>
@@ -42,7 +42,7 @@ export default function PublisherProducts() {
                   <td className="p-3">Rp {Number(p.marketplacePrice).toLocaleString()}</td>
                   <td className="p-3">{p.stock}</td>
                   <td className="p-3">
-                    <span className={`px-2 py-1 rounded text-sm ${
+                    <span className={`px-2 py-1 text-sm ${
                       p.status === 'PUBLISHED' ? 'bg-green-100 text-green-700' :
                       p.status === 'PENDING_APPROVAL' ? 'bg-yellow-100 text-yellow-700' :
                       p.status === 'REJECTED' ? 'bg-red-100 text-red-700' :

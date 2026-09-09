@@ -16,7 +16,7 @@ export default function Reports() {
       <div className="flex gap-2 mb-6">
         <button
           onClick={() => setActiveTab('sales')}
-          className={`px-4 py-2 rounded-lg ${
+          className={`px-4 py-2 ${
             activeTab === 'sales' ? 'bg-brand-accent text-white' : 'bg-white border'
           }`}
         >
@@ -24,7 +24,7 @@ export default function Reports() {
         </button>
         <button
           onClick={() => setActiveTab('publishers')}
-          className={`px-4 py-2 rounded-lg ${
+          className={`px-4 py-2 ${
             activeTab === 'publishers' ? 'bg-brand-accent text-white' : 'bg-white border'
           }`}
         >
@@ -41,7 +41,7 @@ export default function Reports() {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="border rounded px-3 py-2"
+                className="border px-3 py-2"
               />
             </div>
             <div>
@@ -50,23 +50,23 @@ export default function Reports() {
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="border rounded px-3 py-2"
+                className="border px-3 py-2"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="bg-white rounded-lg p-4">
+            <div className="bg-white p-4">
               <p className="text-sm text-gray-500">Total Revenue</p>
               <p className="text-2xl font-bold text-brand-accent">
                 Rp {Number(salesData?.totalRevenue || 0).toLocaleString()}
               </p>
             </div>
-            <div className="bg-white rounded-lg p-4">
+            <div className="bg-white p-4">
               <p className="text-sm text-gray-500">Total Orders</p>
               <p className="text-2xl font-bold">{salesData?.totalOrders || 0}</p>
             </div>
-            <div className="bg-white rounded-lg p-4">
+            <div className="bg-white p-4">
               <p className="text-sm text-gray-500">Average Order</p>
               <p className="text-2xl font-bold">
                 Rp {Number(salesData?.averageOrder || 0).toLocaleString()}
@@ -75,7 +75,7 @@ export default function Reports() {
           </div>
 
           {salesData && salesData.byDay && salesData.byDay.length > 0 && (
-            <div className="bg-white rounded-lg p-4">
+            <div className="bg-white p-4">
               <h3 className="font-bold mb-3">Daily Breakdown</h3>
               <table className="w-full">
                 <thead className="border-b">
@@ -101,7 +101,7 @@ export default function Reports() {
       )}
 
       {activeTab === 'publishers' && (
-        <div className="bg-white rounded-lg p-4">
+        <div className="bg-white p-4">
           <table className="w-full">
             <thead className="border-b">
               <tr>

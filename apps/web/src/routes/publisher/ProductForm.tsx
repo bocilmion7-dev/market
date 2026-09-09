@@ -60,7 +60,7 @@ export default function ProductForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">Category</label>
-          <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="w-full border rounded-lg px-3 py-2" required>
+          <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="w-full border px-3 py-2" required>
             <option value="">Select category...</option>
             {categories?.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
@@ -68,12 +68,12 @@ export default function ProductForm() {
 
         <div>
           <label className="block text-sm font-medium mb-1">Product Name</label>
-          <input value={name} onChange={(e) => setName(e.target.value)} className="w-full border rounded-lg px-3 py-2" required />
+          <input value={name} onChange={(e) => setName(e.target.value)} className="w-full border px-3 py-2" required />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full border rounded-lg px-3 py-2 h-24" required />
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full border px-3 py-2 h-24" required />
         </div>
 
         {catSchema?.fields && (
@@ -94,24 +94,24 @@ export default function ProductForm() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-1">Best Price (Rp)</label>
-            <input type="number" value={bestPrice} onChange={(e) => setBestPrice(Number(e.target.value))} className="w-full border rounded-lg px-3 py-2" min="0" required />
+            <input type="number" value={bestPrice} onChange={(e) => setBestPrice(Number(e.target.value))} className="w-full border px-3 py-2" min="0" required />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Stock</label>
-            <input type="number" value={stock} onChange={(e) => setStock(Number(e.target.value))} className="w-full border rounded-lg px-3 py-2" min="0" required />
+            <input type="number" value={stock} onChange={(e) => setStock(Number(e.target.value))} className="w-full border px-3 py-2" min="0" required />
           </div>
         </div>
 
         <div className="flex gap-2 pt-4">
-          <button type="submit" className="bg-brand-accent text-white px-6 py-2 rounded-lg">
+          <button type="submit" className="bg-brand-accent text-white px-6 py-2">
             {isEdit ? 'Update' : 'Save Draft'}
           </button>
           {isEdit && existingProduct?.status === 'DRAFT' && (
-            <button type="button" onClick={handleSubmitForApproval} className="bg-green-600 text-white px-6 py-2 rounded-lg">
+            <button type="button" onClick={handleSubmitForApproval} className="bg-green-600 text-white px-6 py-2">
               Submit for Approval
             </button>
           )}
-          <button type="button" onClick={() => navigate('/publisher/products')} className="border px-6 py-2 rounded-lg">Cancel</button>
+          <button type="button" onClick={() => navigate('/publisher/products')} className="border px-6 py-2">Cancel</button>
         </div>
       </form>
     </div>

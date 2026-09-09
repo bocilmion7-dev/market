@@ -49,11 +49,11 @@ function BannerSlider({ banners }: { banners: any[] }) {
       {banner.link ? <Link to={banner.link}>{content}</Link> : content}
       {banners.length > 1 && (
         <>
-          <button onClick={() => setCurrent((c) => (c - 1 + banners.length) % banners.length)} className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-8 h-8 rounded-full flex items-center justify-center">‹</button>
-          <button onClick={() => setCurrent((c) => (c + 1) % banners.length)} className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-8 h-8 rounded-full flex items-center justify-center">›</button>
+          <button onClick={() => setCurrent((c) => (c - 1 + banners.length) % banners.length)} className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-8 h-8 flex items-center justify-center">‹</button>
+          <button onClick={() => setCurrent((c) => (c + 1) % banners.length)} className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-8 h-8 flex items-center justify-center">›</button>
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
             {banners.map((_: any, i: number) => (
-              <button key={i} onClick={() => setCurrent(i)} className={`w-2 h-2 rounded-full transition-colors ${i === current ? 'bg-white' : 'bg-white/50'}`} />
+              <button key={i} onClick={() => setCurrent(i)} className={`w-2 h-2 transition-colors ${i === current ? 'bg-white' : 'bg-white/50'}`} />
             ))}
           </div>
         </>
@@ -86,13 +86,13 @@ export default function Home() {
         <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Categories</h2>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
           {isLoading ? (
-            Array(5).fill(0).map((_, i) => <Skeleton key={i} className="h-24 rounded-lg" />)
+            Array(5).fill(0).map((_, i) => <Skeleton key={i} className="h-24" />)
           ) : (
             data?.categories?.map((cat: any) => (
               <Link
                 key={cat.id}
                 to={`/products?categoryId=${cat.id}`}
-                className="bg-[rgb(var(--bg-primary))] rounded-lg p-4 flex flex-col items-center justify-center gap-2 hover:shadow-md transition-shadow touch-target h-24"
+                className="bg-[rgb(var(--bg-primary))] p-4 flex flex-col items-center justify-center gap-2 hover:shadow-md transition-shadow touch-target h-24"
               >
                 <span className="text-2xl">{getCategoryIcon(cat.name)}</span>
                 <p className="font-medium text-xs md:text-sm text-center leading-tight">{cat.name}</p>
@@ -111,7 +111,7 @@ export default function Home() {
           {isLoading ? (
             Array(4).fill(0).map((_, i) => (
               <div key={i} className="space-y-3">
-                <Skeleton className="h-40 md:h-48 rounded-lg" />
+                <Skeleton className="h-40 md:h-48" />
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />
               </div>
@@ -121,7 +121,7 @@ export default function Home() {
               <Link
                 key={product.id}
                 to={`/products/${product.slug}`}
-                className="bg-[rgb(var(--bg-primary))] rounded-lg overflow-hidden hover:shadow-md transition-shadow"
+                className="bg-[rgb(var(--bg-primary))] overflow-hidden hover:shadow-md transition-shadow"
               >
                 <div className="h-32 md:h-48 bg-[rgb(var(--bg-tertiary))] flex items-center justify-center">
                   {product.media?.[0]?.url ? (

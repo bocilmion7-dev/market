@@ -39,7 +39,7 @@ export default function MobileNav() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search products..."
-              className="w-full px-4 py-2 rounded-lg text-brand-dark"
+              className="w-full px-4 py-2 text-brand-dark"
             />
           </form>
 

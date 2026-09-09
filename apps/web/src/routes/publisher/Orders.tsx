@@ -14,13 +14,13 @@ export default function PublisherOrders() {
       <h1 className="text-2xl font-bold mb-6">My Orders</h1>
 
       <div className="flex gap-2 mb-6">
-        <button onClick={() => setStatus('')} className={`px-3 py-1 rounded text-sm ${!status ? 'bg-brand-accent text-white' : 'bg-white border'}`}>All</button>
+        <button onClick={() => setStatus('')} className={`px-3 py-1 text-sm ${!status ? 'bg-brand-accent text-white' : 'bg-white border'}`}>All</button>
         {STATUS_OPTIONS.map((s) => (
-          <button key={s} onClick={() => setStatus(s)} className={`px-3 py-1 rounded text-sm ${status === s ? 'bg-brand-accent text-white' : 'bg-white border'}`}>{s}</button>
+          <button key={s} onClick={() => setStatus(s)} className={`px-3 py-1 text-sm ${status === s ? 'bg-brand-accent text-white' : 'bg-white border'}`}>{s}</button>
         ))}
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white shadow overflow-hidden">
         <table className="w-full">
           <thead className="bg-brand-dark text-white">
             <tr>
@@ -45,7 +45,7 @@ export default function PublisherOrders() {
                   <td className="p-3 text-sm">{order.customerName || order.customer?.name}</td>
                   <td className="p-3 text-sm">Rp {Number(order.grandTotal).toLocaleString()}</td>
                   <td className="p-3">
-                    <span className={`px-2 py-1 rounded text-xs ${
+                    <span className={`px-2 py-1 text-xs ${
                       order.orderStatus === 'PAID' ? 'bg-blue-100 text-blue-700' :
                       order.orderStatus === 'SHIPPED' ? 'bg-purple-100 text-purple-700' :
                       order.orderStatus === 'COMPLETED' ? 'bg-green-100 text-green-700' :

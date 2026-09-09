@@ -64,7 +64,7 @@ export default function ProductList() {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="w-full sm:w-auto border border-[rgb(var(--border))] rounded-lg px-3 py-2 text-sm bg-[rgb(var(--bg-primary))]"
+              className="w-full sm:w-auto border border-[rgb(var(--border))] px-3 py-2 text-sm bg-[rgb(var(--bg-primary))]"
             >
               <option value="newest">Newest</option>
               <option value="price_asc">Price: Low → High</option>
@@ -76,7 +76,7 @@ export default function ProductList() {
             <div className="flex gap-2 overflow-x-auto pb-4 mb-4 -mx-4 px-4">
               <button
                 onClick={() => handleCategoryClick(null)}
-                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-sm ${!categoryId ? 'bg-brand-accent text-white' : 'bg-[rgb(var(--bg-tertiary))] text-[rgb(var(--text-secondary))]'}`}
+                className={`flex-shrink-0 px-3 py-1.5 text-sm ${!categoryId ? 'bg-brand-accent text-white' : 'bg-[rgb(var(--bg-tertiary))] text-[rgb(var(--text-secondary))]'}`}
               >
                 All
               </button>
@@ -84,7 +84,7 @@ export default function ProductList() {
                 <button
                   key={cat.id}
                   onClick={() => handleCategoryClick(cat.id)}
-                  className={`flex-shrink-0 px-3 py-1.5 rounded-full text-sm ${categoryId === cat.id ? 'bg-brand-accent text-white' : 'bg-[rgb(var(--bg-tertiary))] text-[rgb(var(--text-secondary))]'}`}
+                  className={`flex-shrink-0 px-3 py-1.5 text-sm ${categoryId === cat.id ? 'bg-brand-accent text-white' : 'bg-[rgb(var(--bg-tertiary))] text-[rgb(var(--text-secondary))]'}`}
                 >
                   {cat.name}
                 </button>
@@ -96,7 +96,7 @@ export default function ProductList() {
             {isLoading ? (
               Array(6).fill(0).map((_, i) => (
                 <div key={i} className="space-y-3">
-                  <Skeleton className="h-40 md:h-48 rounded-lg" />
+                  <Skeleton className="h-40 md:h-48" />
                   <Skeleton className="h-4 w-3/4" />
                   <Skeleton className="h-4 w-1/2" />
                 </div>
@@ -114,7 +114,7 @@ export default function ProductList() {
                 <Link
                   key={product.id}
                   to={`/products/${product.slug}`}
-                  className="bg-[rgb(var(--bg-primary))] rounded-lg overflow-hidden hover:shadow-md transition-shadow"
+                  className="bg-[rgb(var(--bg-primary))] overflow-hidden hover:shadow-md transition-shadow"
                 >
                   <div className="h-32 md:h-48 bg-[rgb(var(--bg-tertiary))] flex items-center justify-center">
                     {product.media?.[0]?.url ? (
@@ -145,7 +145,7 @@ export default function ProductList() {
                     params.set('page', String(p));
                     setSearchParams(params);
                   }}
-                  className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${
+                  className={`w-10 h-10 text-sm font-medium transition-colors ${
                     p === page
                       ? 'bg-brand-accent text-white'
                       : 'bg-[rgb(var(--bg-primary))] border border-[rgb(var(--border))] hover:bg-[rgb(var(--bg-tertiary))]'
@@ -158,6 +158,27 @@ export default function ProductList() {
           )}
         </div>
       </div>
+
+      <section className="mt-12 border-t border-[rgb(var(--border))] pt-8">
+        <h3 className="text-center text-sm font-semibold text-[rgb(var(--text-muted))] mb-4">Supported Couriers</h3>
+        <div className="flex flex-wrap justify-center items-center gap-6 md:gap-10">
+          {[
+            { name: 'JNE', color: '#006CB7' },
+            { name: 'J&T Express', color: '#E31E24' },
+            { name: 'SiCepat', color: '#FF6600' },
+            { name: 'AnterAja', color: '#00A651' },
+            { name: 'Grab Express', color: '#00B14F' },
+            { name: 'GoSend', color: '#00AA13' },
+          ].map((courier) => (
+            <div key={courier.name} className="flex flex-col items-center gap-1">
+              <div className="w-16 h-8 flex items-center justify-center text-xs font-bold text-white" style={{ backgroundColor: courier.color }}>
+                {courier.name.split(' ')[0]}
+              </div>
+              <span className="text-xs text-[rgb(var(--text-muted))]">{courier.name}</span>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

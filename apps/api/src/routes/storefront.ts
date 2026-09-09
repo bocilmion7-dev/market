@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as storefrontService from '../services/storefront.service';
-import { getPublicBanners } from '../services/settings.service';
+import { getPublicBanners, getSiteName, getSiteFooter } from '../services/settings.service';
 
 const router = Router();
 
@@ -9,6 +9,13 @@ router.get('/homepage', async (req, res, next) => {
     const homepage = await storefrontService.getHomepage();
     const banners = await getPublicBanners();
     res.json({ success: true, data: { ...homepage, banners } });
+  } catch (err) { next(err); }
+});
+
+router.get('/site-settings', async (req, res, next) => {
+  try {
+    const [siteName, siteFooter] = await Promise.all([getSiteName(), getSiteFooter()]);
+    res.json({ success: true, data: { siteName, siteFooter } });
   } catch (err) { next(err); }
 });
 

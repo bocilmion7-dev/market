@@ -19,7 +19,7 @@ export default function WriteReview() {
     <div className="max-w-lg mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Write a Review</h1>
 
-      <div className="bg-white rounded-lg p-6 space-y-4">
+      <div className="bg-white p-6 space-y-4">
         <div>
           <label className="block text-sm font-medium mb-2">Rating</label>
           <div className="flex gap-1">
@@ -35,11 +35,11 @@ export default function WriteReview() {
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Share your experience with this product..."
-            className="w-full border rounded-lg px-3 py-2 h-24"
+            className="w-full border px-3 py-2 h-24"
           />
         </div>
 
-        <button onClick={handleSubmit} disabled={createReview.isPending} className="w-full bg-brand-accent text-white py-2 rounded-lg disabled:opacity-50">
+        <button onClick={handleSubmit} disabled={createReview.isPending} className="w-full bg-brand-accent text-white py-2 disabled:opacity-50">
           {createReview.isPending ? 'Submitting...' : 'Submit Review'}
         </button>
       </div>

@@ -8,7 +8,7 @@ export default function Skeleton({ className }: SkeletonProps) {
   return (
     <div
       className={cn(
-        'skeleton rounded',
+        'skeleton',
         className
       )}
     />

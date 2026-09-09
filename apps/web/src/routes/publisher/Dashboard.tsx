@@ -8,8 +8,8 @@ export default function PublisherDashboard() {
           { label: 'Published', value: '—', color: 'bg-green-500' },
           { label: 'Pending Approval', value: '—', color: 'bg-yellow-500' },
         ].map((card) => (
-          <div key={card.label} className="bg-white rounded-lg shadow p-4">
-            <div className={`h-1 ${card.color} rounded-full mb-3`} />
+          <div key={card.label} className="bg-white shadow p-4">
+            <div className={`h-1 ${card.color} mb-3`} />
             <p className="text-sm text-gray-500">{card.label}</p>
             <p className="text-2xl font-bold">{card.value}</p>
           </div>

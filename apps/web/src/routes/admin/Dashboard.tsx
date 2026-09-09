@@ -27,7 +27,7 @@ export default function AdminDashboard() {
               </div>
             ) : (
               <>
-                <div className={`h-1 ${card.color} rounded-full mb-3`} />
+                <div className={`h-1 ${card.color} mb-3`} />
                 <p className="text-xs md:text-sm text-[rgb(var(--text-muted))]">{card.label}</p>
                 <p className="text-xl md:text-2xl font-bold">{card.value}</p>
               </>
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
                   <td className="p-2 text-sm">Rp {Number(order.grandTotal).toLocaleString()}</td>
                   <td className="p-2">
                     <span
-                      className={`px-2 py-1 rounded text-xs ${
+                      className={`px-2 py-1 text-xs ${
                         order.orderStatus === 'COMPLETED'
                           ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                           : order.orderStatus === 'CANCELLED'

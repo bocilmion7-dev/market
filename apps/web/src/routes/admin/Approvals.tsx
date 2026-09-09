@@ -24,7 +24,7 @@ export default function Approvals() {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Product Approvals</h1>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white shadow overflow-hidden">
         <table className="w-full">
           <thead className="bg-brand-dark text-white">
             <tr>
@@ -56,10 +56,10 @@ export default function Approvals() {
                   <td className="p-3 text-sm text-gray-500">{new Date(p.updatedAt).toLocaleDateString()}</td>
                   <td className="p-3">
                     <div className="flex gap-2">
-                      <button onClick={() => handleApprove(p.id)} className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">
+                      <button onClick={() => handleApprove(p.id)} className="bg-green-500 text-white px-3 py-1 text-sm hover:bg-green-600">
                         Approve
                       </button>
-                      <button onClick={() => setRejectModal(p.id)} className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
+                      <button onClick={() => setRejectModal(p.id)} className="bg-red-500 text-white px-3 py-1 text-sm hover:bg-red-600">
                         Reject
                       </button>
                     </div>
@@ -76,7 +76,7 @@ export default function Approvals() {
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-3 py-1 rounded border disabled:opacity-50"
+            className="px-3 py-1 border disabled:opacity-50"
           >
             Previous
           </button>
@@ -84,7 +84,7 @@ export default function Approvals() {
           <button
             onClick={() => setPage(p => p + 1)}
             disabled={page >= data.totalPages}
-            className="px-3 py-1 rounded border disabled:opacity-50"
+            className="px-3 py-1 border disabled:opacity-50"
           >
             Next
           </button>
@@ -93,18 +93,18 @@ export default function Approvals() {
 
       {rejectModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div className="bg-white p-6 w-full max-w-md">
             <h3 className="text-lg font-bold mb-4">Reject Product</h3>
             <textarea
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="Provide a reason for rejection..."
-              className="w-full border rounded-lg px-3 py-2 h-24 mb-4"
+              className="w-full border px-3 py-2 h-24 mb-4"
               required
             />
             <div className="flex gap-2 justify-end">
-              <button onClick={() => { setRejectModal(null); setRejectReason(''); }} className="border px-4 py-2 rounded-lg">Cancel</button>
-              <button onClick={handleReject} disabled={!rejectReason} className="bg-red-500 text-white px-4 py-2 rounded-lg disabled:opacity-50">Reject</button>
+              <button onClick={() => { setRejectModal(null); setRejectReason(''); }} className="border px-4 py-2">Cancel</button>
+              <button onClick={handleReject} disabled={!rejectReason} className="bg-red-500 text-white px-4 py-2 disabled:opacity-50">Reject</button>
             </div>
           </div>
         </div>

@@ -65,7 +65,7 @@ export default function MobileDrawer({ links, title }: MobileDrawerProps) {
           <h2 className="text-lg font-bold">{title}</h2>
           <button
             onClick={() => setDrawerOpen(false)}
-            className="p-2 -mr-2 hover:bg-[rgb(var(--bg-tertiary))] rounded-lg touch-target"
+            className="p-2 -mr-2 hover:bg-[rgb(var(--bg-tertiary))] touch-target"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -80,7 +80,7 @@ export default function MobileDrawer({ links, title }: MobileDrawerProps) {
               to={link.path}
               onClick={() => setDrawerOpen(false)}
               className={cn(
-                'block px-3 py-2.5 rounded-lg text-sm transition-colors touch-target',
+                'block px-3 py-2.5 text-sm transition-colors touch-target',
                 location.pathname === link.path
                   ? 'bg-brand-accent text-white'
                   : 'text-[rgb(var(--text-secondary))] hover:bg-[rgb(var(--bg-tertiary))]'

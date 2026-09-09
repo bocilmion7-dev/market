@@ -74,7 +74,7 @@ export default function AdminUsers() {
       {isLoading ? (
         <div className="space-y-4">
           {Array(5).fill(0).map((_, i) => (
-            <Skeleton key={i} className="h-20 rounded-lg" />
+            <Skeleton key={i} className="h-20" />
           ))}
         </div>
       ) : data?.users?.length === 0 ? (

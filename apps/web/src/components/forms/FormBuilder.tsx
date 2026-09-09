@@ -53,7 +53,7 @@ export default function FormBuilder({ fields, onChange }: FormBuilderProps) {
   return (
     <div className="space-y-4">
       {fields.map((field, index) => (
-        <div key={index} className="border rounded-lg p-4 bg-white">
+        <div key={index} className="border p-4 bg-white">
           <div className="flex justify-between items-center mb-2">
             <span className="font-medium">{field.label || field.fieldKey} <span className="text-gray-400 text-sm">({field.fieldType})</span></span>
             <div className="flex gap-1">
@@ -66,17 +66,17 @@ export default function FormBuilder({ fields, onChange }: FormBuilderProps) {
 
           {editing === index && (
             <div className="space-y-2 mt-2 pt-2 border-t">
-              <input placeholder="Label" value={field.label} onChange={(e) => updateField(index, { label: e.target.value })} className="w-full border rounded px-2 py-1 text-sm" />
-              <input placeholder="Field Key" value={field.fieldKey} onChange={(e) => updateField(index, { fieldKey: e.target.value })} className="w-full border rounded px-2 py-1 text-sm" />
-              <select value={field.fieldType} onChange={(e) => updateField(index, { fieldType: e.target.value })} className="w-full border rounded px-2 py-1 text-sm">
+              <input placeholder="Label" value={field.label} onChange={(e) => updateField(index, { label: e.target.value })} className="w-full border px-2 py-1 text-sm" />
+              <input placeholder="Field Key" value={field.fieldKey} onChange={(e) => updateField(index, { fieldKey: e.target.value })} className="w-full border px-2 py-1 text-sm" />
+              <select value={field.fieldType} onChange={(e) => updateField(index, { fieldType: e.target.value })} className="w-full border px-2 py-1 text-sm">
                 {FIELD_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
               <label className="flex items-center gap-2">
                 <input type="checkbox" checked={field.required} onChange={(e) => updateField(index, { required: e.target.checked })} />
                 <span className="text-sm">Required</span>
               </label>
-              <input placeholder="Placeholder" value={field.placeholder || ''} onChange={(e) => updateField(index, { placeholder: e.target.value })} className="w-full border rounded px-2 py-1 text-sm" />
-              <input placeholder="Help Text" value={field.helpText || ''} onChange={(e) => updateField(index, { helpText: e.target.value })} className="w-full border rounded px-2 py-1 text-sm" />
+              <input placeholder="Placeholder" value={field.placeholder || ''} onChange={(e) => updateField(index, { placeholder: e.target.value })} className="w-full border px-2 py-1 text-sm" />
+              <input placeholder="Help Text" value={field.helpText || ''} onChange={(e) => updateField(index, { helpText: e.target.value })} className="w-full border px-2 py-1 text-sm" />
               {['SELECT', 'MULTI_SELECT', 'RADIO'].includes(field.fieldType) && (
                 <div>
                   <p className="text-xs text-gray-500 mb-1">Options (one per line: label,value)</p>
@@ -89,7 +89,7 @@ export default function FormBuilder({ fields, onChange }: FormBuilderProps) {
                       });
                       updateField(index, { options: opts });
                     }}
-                    className="w-full border rounded px-2 py-1 text-sm h-20"
+                    className="w-full border px-2 py-1 text-sm h-20"
                   />
                 </div>
               )}
@@ -98,7 +98,7 @@ export default function FormBuilder({ fields, onChange }: FormBuilderProps) {
         </div>
       ))}
 
-      <button onClick={addField} className="border-2 border-dashed rounded-lg p-3 w-full text-gray-500 hover:text-brand-accent hover:border-brand-accent transition-colors">
+      <button onClick={addField} className="border-2 border-dashed p-3 w-full text-gray-500 hover:text-brand-accent hover:border-brand-accent transition-colors">
         + Add Field
       </button>
     </div>

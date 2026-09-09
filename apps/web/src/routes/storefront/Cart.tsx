@@ -20,7 +20,7 @@ export default function Cart() {
         <Skeleton className="h-8 w-48 mb-6" />
         <div className="space-y-4">
           {Array(3).fill(0).map((_, i) => (
-            <Skeleton key={i} className="h-24 rounded-lg" />
+            <Skeleton key={i} className="h-24" />
           ))}
         </div>
       </div>
@@ -32,7 +32,7 @@ export default function Cart() {
       <h1 className="text-xl md:text-2xl font-bold mb-6">Shopping Cart</h1>
 
       {!items || items.length === 0 ? (
-        <div className="bg-[rgb(var(--bg-primary))] rounded-lg">
+        <div className="bg-[rgb(var(--bg-primary))]">
           <EmptyState
             title="Your cart is empty"
             description="Add some products to get started"
@@ -45,10 +45,10 @@ export default function Cart() {
             {items.map((item: any) => {
               const price = item.variant ? Number(item.variant.marketplacePrice) : Number(item.product.marketplacePrice);
               return (
-                <div key={item.id} className="bg-[rgb(var(--bg-primary))] rounded-lg p-4 flex gap-4">
-                  <div className="w-16 h-16 md:w-20 md:h-20 bg-[rgb(var(--bg-tertiary))] rounded flex-shrink-0 flex items-center justify-center">
+                <div key={item.id} className="bg-[rgb(var(--bg-primary))] p-4 flex gap-4">
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-[rgb(var(--bg-tertiary))] flex-shrink-0 flex items-center justify-center">
                     {item.product.media?.[0]?.url ? (
-                      <img src={item.product.media[0].url} alt="" className="w-full h-full object-cover rounded" />
+                      <img src={item.product.media[0].url} alt="" className="w-full h-full object-cover" />
                     ) : <span className="text-[rgb(var(--text-muted))] text-xs">No img</span>}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -62,14 +62,14 @@ export default function Cart() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => updateItem.mutate({ id: item.id, quantity: item.quantity - 1 })}
-                        className="w-8 h-8 border border-[rgb(var(--border))] rounded flex items-center justify-center hover:bg-[rgb(var(--bg-tertiary))] touch-target"
+                        className="w-8 h-8 border border-[rgb(var(--border))] flex items-center justify-center hover:bg-[rgb(var(--bg-tertiary))] touch-target"
                       >
                         -
                       </button>
                       <span className="w-8 text-center text-sm">{item.quantity}</span>
                       <button
                         onClick={() => updateItem.mutate({ id: item.id, quantity: item.quantity + 1 })}
-                        className="w-8 h-8 border border-[rgb(var(--border))] rounded flex items-center justify-center hover:bg-[rgb(var(--bg-tertiary))] touch-target"
+                        className="w-8 h-8 border border-[rgb(var(--border))] flex items-center justify-center hover:bg-[rgb(var(--bg-tertiary))] touch-target"
                       >
                         +
                       </button>
@@ -92,14 +92,14 @@ export default function Cart() {
             })}
           </div>
 
-          <div className="bg-[rgb(var(--bg-primary))] rounded-lg p-4 md:p-6 mt-6 md:sticky md:top-20">
+          <div className="bg-[rgb(var(--bg-primary))] p-4 md:p-6 mt-6 md:sticky md:top-20">
             <div className="flex justify-between items-center mb-4">
               <span className="text-lg">Total</span>
               <span className="text-xl md:text-2xl font-bold text-brand-accent">Rp {total.toLocaleString()}</span>
             </div>
             <Link
               to="/checkout"
-              className="block w-full bg-brand-accent text-white text-center py-3 rounded-lg font-semibold hover:bg-brand-accent-dark active:scale-[0.98] transition-all touch-target"
+              className="block w-full bg-brand-accent text-white text-center py-3 font-semibold hover:bg-brand-accent-dark active:scale-[0.98] transition-all touch-target"
             >
               Proceed to Checkout
             </Link>

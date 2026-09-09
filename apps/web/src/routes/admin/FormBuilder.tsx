@@ -54,7 +54,7 @@ export default function FormBuilderPage() {
 
       <div className="mb-4">
         <label className="block text-sm font-medium mb-1">Select Category</label>
-        <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="border rounded-lg px-3 py-2 w-full max-w-md">
+        <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="border px-3 py-2 w-full max-w-md">
           <option value="">Choose category...</option>
           {categories?.map((cat: any) => (
             <option key={cat.id} value={cat.id}>{cat.name}</option>
@@ -65,10 +65,10 @@ export default function FormBuilderPage() {
       {selectedCategory && (
         <>
           <div className="flex gap-2 mb-6">
-            <button onClick={() => setActiveTab('category')} className={`px-4 py-2 rounded-lg ${activeTab === 'category' ? 'bg-brand-accent text-white' : 'bg-white border'}`}>
+            <button onClick={() => setActiveTab('category')} className={`px-4 py-2 ${activeTab === 'category' ? 'bg-brand-accent text-white' : 'bg-white border'}`}>
               Category Fields
             </button>
-            <button onClick={() => setActiveTab('variant')} className={`px-4 py-2 rounded-lg ${activeTab === 'variant' ? 'bg-brand-accent text-white' : 'bg-white border'}`}>
+            <button onClick={() => setActiveTab('variant')} className={`px-4 py-2 ${activeTab === 'variant' ? 'bg-brand-accent text-white' : 'bg-white border'}`}>
               Variant Fields
             </button>
           </div>
@@ -81,10 +81,10 @@ export default function FormBuilderPage() {
                   {catDraft && ` | Draft v${catDraft.version}`}
                 </p>
                 <div className="flex gap-2">
-                  <button onClick={() => saveCatForm.mutate(catFields)} className="bg-white border px-4 py-2 rounded-lg text-sm">
+                  <button onClick={() => saveCatForm.mutate(catFields)} className="bg-white border px-4 py-2 text-sm">
                     Save Draft
                   </button>
-                  <button onClick={() => publishCatForm.mutate()} className="bg-brand-accent text-white px-4 py-2 rounded-lg text-sm">
+                  <button onClick={() => publishCatForm.mutate()} className="bg-brand-accent text-white px-4 py-2 text-sm">
                     Publish
                   </button>
                 </div>
@@ -100,10 +100,10 @@ export default function FormBuilderPage() {
                   {varSchema ? `Published v${varSchema.version}` : 'No published schema'}
                 </p>
                 <div className="flex gap-2">
-                  <button onClick={() => saveVarForm.mutate(varFields)} className="bg-white border px-4 py-2 rounded-lg text-sm">
+                  <button onClick={() => saveVarForm.mutate(varFields)} className="bg-white border px-4 py-2 text-sm">
                     Save Draft
                   </button>
-                  <button onClick={() => publishVarForm.mutate()} className="bg-brand-accent text-white px-4 py-2 rounded-lg text-sm">
+                  <button onClick={() => publishVarForm.mutate()} className="bg-brand-accent text-white px-4 py-2 text-sm">
                     Publish
                   </button>
                 </div>

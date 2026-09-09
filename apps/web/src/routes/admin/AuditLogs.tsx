@@ -19,17 +19,17 @@ export default function AuditLogs() {
           value={action}
           onChange={(e) => setAction(e.target.value)}
           placeholder="Filter by action..."
-          className="border rounded px-3 py-2 text-sm"
+          className="border px-3 py-2 text-sm"
         />
         <input
           value={entityType}
           onChange={(e) => setEntityType(e.target.value)}
           placeholder="Filter by entity type..."
-          className="border rounded px-3 py-2 text-sm"
+          className="border px-3 py-2 text-sm"
         />
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white shadow overflow-hidden">
         <table className="w-full">
           <thead className="bg-brand-dark text-white">
             <tr>
@@ -77,7 +77,7 @@ export default function AuditLogs() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            className="px-3 py-1 border disabled:opacity-50"
           >
             Prev
           </button>
@@ -87,7 +87,7 @@ export default function AuditLogs() {
           <button
             onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))}
             disabled={page === data.totalPages}
-            className="px-3 py-1 border rounded disabled:opacity-50"
+            className="px-3 py-1 border disabled:opacity-50"
           >
             Next
           </button>

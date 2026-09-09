@@ -16,7 +16,7 @@ export default function ToastContainer() {
         <div
           key={toast.id}
           className={cn(
-            'flex items-center justify-between p-3 rounded-lg shadow-lg animate-slide-in-right',
+            'flex items-center justify-between p-3 shadow-lg animate-slide-in-right',
             typeStyles[toast.type]
           )}
         >
