@@ -9,6 +9,7 @@ import adminCategoryRoutes from './routes/admin/categories';
 import adminBrandRoutes from './routes/admin/brands';
 import adminSettingsRoutes from './routes/admin/settings';
 import adminFormBuilderRoutes from './routes/admin/form-builder';
+import publisherProductRoutes from './routes/publisher/products';
 
 const app = express();
 
@@ -27,6 +28,8 @@ app.use('/api/admin/categories', adminCategoryRoutes);
 app.use('/api/admin/brands', adminBrandRoutes);
 app.use('/api/admin/settings', adminSettingsRoutes);
 app.use('/api/admin', adminFormBuilderRoutes);
+
+app.use('/api/publisher/products', publisherProductRoutes);
 
 app.use(errorHandler);
 

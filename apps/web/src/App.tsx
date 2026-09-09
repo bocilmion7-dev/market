@@ -9,6 +9,10 @@ import AdminCategories from '@/routes/admin/Categories';
 import AdminBrands from '@/routes/admin/Brands';
 import AdminSettings from '@/routes/admin/Settings';
 import FormBuilderPage from '@/routes/admin/FormBuilder';
+import PublisherLayout from '@/components/layout/PublisherLayout';
+import PublisherDashboard from '@/routes/publisher/Dashboard';
+import PublisherProducts from '@/routes/publisher/Products';
+import ProductForm from '@/routes/publisher/ProductForm';
 
 const queryClient = new QueryClient();
 
@@ -38,10 +42,15 @@ function App() {
             path="/publisher"
             element={
               <ProtectedRoute allowedRoles={['PRODUCT_PUBLISHER']}>
-                <div className="p-4"><h1>Publisher Dashboard</h1></div>
+                <PublisherLayout />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<PublisherDashboard />} />
+            <Route path="products" element={<PublisherProducts />} />
+            <Route path="products/new" element={<ProductForm />} />
+            <Route path="products/:id" element={<ProductForm />} />
+          </Route>
           <Route path="/" element={<div className="p-4"><h1>Storefront</h1></div>} />
         </Routes>
       </BrowserRouter>
