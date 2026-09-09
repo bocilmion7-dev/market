@@ -10,6 +10,8 @@ const navItems = [
   { label: 'Settings', path: '/admin/settings' },
   { label: 'Form Builder', path: '/admin/form-builder' },
   { label: 'Approvals', path: '/admin/approvals' },
+  { label: 'Reports', path: '/admin/reports' },
+  { label: 'Audit Logs', path: '/admin/audit-logs' },
 ];
 
 export default function AdminLayout() {

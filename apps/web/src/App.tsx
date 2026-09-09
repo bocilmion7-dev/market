@@ -10,6 +10,8 @@ import AdminBrands from '@/routes/admin/Brands';
 import AdminSettings from '@/routes/admin/Settings';
 import FormBuilderPage from '@/routes/admin/FormBuilder';
 import Approvals from '@/routes/admin/Approvals';
+import Reports from '@/routes/admin/Reports';
+import AuditLogs from '@/routes/admin/AuditLogs';
 import PublisherLayout from '@/components/layout/PublisherLayout';
 import PublisherDashboard from '@/routes/publisher/Dashboard';
 import PublisherProducts from '@/routes/publisher/Products';
@@ -48,6 +50,8 @@ function App() {
             <Route path="form-builder" element={<FormBuilderPage />} />
             <Route path="form-builder/:id" element={<FormBuilderPage />} />
             <Route path="approvals" element={<Approvals />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="audit-logs" element={<AuditLogs />} />
           </Route>
           <Route
             path="/publisher"
