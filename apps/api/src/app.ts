@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { setupSession } from './lib/session';
 import { errorHandler } from './middleware/errorHandler';
+import authRoutes from './routes/auth';
 
 const app = express();
 
@@ -14,7 +15,7 @@ app.use(cors({
 app.use(express.json());
 app.use(setupSession());
 
-// Routes will be mounted here
+app.use('/api/auth', authRoutes);
 
 app.use(errorHandler);
 
