@@ -13,7 +13,7 @@ export default function ProductDetail() {
   if (isLoading) return <div className="max-w-7xl mx-auto px-4 py-12 text-center">Loading...</div>;
   if (!product) return <div className="max-w-7xl mx-auto px-4 py-12 text-center text-gray-500">Product not found</div>;
 
-  const isWishlisted = wishlist?.some((w: any) => w.productId === product.id);
+  const isWishlisted = Array.isArray(wishlist) && wishlist.some((w: any) => w.productId === product.id);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">

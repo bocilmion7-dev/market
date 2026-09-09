@@ -3,20 +3,24 @@ import { api } from '@/lib/api';
 import { useAuthStore } from '@/stores/auth';
 import type { User } from '@/stores/auth';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export function useMe() {
   const setUser = useAuthStore((s) => s.setUser);
-  return useQuery({
+  const query = useQuery({
     queryKey: ['auth', 'me'],
-    queryFn: async () => {
-      return api.get<User>('/auth/me');
-    },
-    onSuccess: (data: User) => {
-      setUser(data);
-    },
+    queryFn: () => api.get<User>('/auth/me'),
     retry: false,
     staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    if (query.data) {
+      setUser(query.data);
+    }
+  }, [query.data, setUser]);
+
+  return query;
 }
 
 export function useLogin() {
@@ -24,7 +28,7 @@ export function useLogin() {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: (credentials: { email: string; password: string }) =>
-      api.post('/auth/login', credentials),
+      api.post<User>('/auth/login', credentials),
     onSuccess: (data: User) => {
       queryClient.setQueryData(['auth', 'me'], data);
       if (data.roles.includes('ADMIN_MAKER')) {

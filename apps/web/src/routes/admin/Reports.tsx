@@ -74,7 +74,7 @@ export default function Reports() {
             </div>
           </div>
 
-          {salesData?.byDay?.length > 0 && (
+          {salesData && salesData.byDay && salesData.byDay.length > 0 && (
             <div className="bg-white rounded-lg p-4">
               <h3 className="font-bold mb-3">Daily Breakdown</h3>
               <table className="w-full">

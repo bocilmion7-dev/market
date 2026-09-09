@@ -76,7 +76,7 @@ export default function AdminUsers() {
             )}
           </tbody>
         </table>
-        {data?.totalPages > 1 && (
+        {data && data.totalPages > 1 && (
           <div className="flex justify-between items-center p-3 border-t">
             <span className="text-sm text-gray-500">
               Page {data.page} of {data.totalPages}
@@ -90,7 +90,7 @@ export default function AdminUsers() {
                 Prev
               </button>
               <button
-                onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))}
+                onClick={() => setPage((p) => Math.min(data!.totalPages, p + 1))}
                 disabled={page >= data.totalPages}
                 className="px-3 py-1 border rounded text-sm disabled:opacity-50"
               >

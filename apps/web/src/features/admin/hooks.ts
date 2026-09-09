@@ -4,6 +4,8 @@ import { api } from '@/lib/api';
 interface PaginatedUsers {
   users: Array<{ id: string; email: string; fullName: string; roles: string[]; status: string }>;
   total: number;
+  page: number;
+  totalPages: number;
 }
 
 interface Category {
