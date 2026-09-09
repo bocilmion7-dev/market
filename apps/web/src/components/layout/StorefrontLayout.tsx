@@ -31,6 +31,7 @@ export default function StorefrontLayout() {
 
             <div className="flex items-center gap-4">
               <Link to="/products" className="text-sm hover:text-brand-accent">Products</Link>
+              <Link to="/cart" className="text-sm hover:text-brand-accent">Cart</Link>
               {user ? (
                 <>
                   {user.roles?.includes('ADMIN_MAKER') && <Link to="/admin" className="text-sm hover:text-brand-accent">Admin</Link>}

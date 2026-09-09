@@ -12,6 +12,8 @@ import adminFormBuilderRoutes from './routes/admin/form-builder';
 import adminApprovalRoutes from './routes/admin/approval';
 import publisherProductRoutes from './routes/publisher/products';
 import storefrontRoutes from './routes/storefront';
+import cartRoutes from './routes/cart';
+import orderRoutes from './routes/orders';
 
 const app = express();
 
@@ -33,6 +35,9 @@ app.use('/api/admin', adminFormBuilderRoutes);
 app.use('/api/admin', adminApprovalRoutes);
 
 app.use('/api/publisher/products', publisherProductRoutes);
+
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);
 
 app.use('/api', storefrontRoutes);
 

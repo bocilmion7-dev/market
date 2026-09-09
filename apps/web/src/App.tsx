@@ -18,6 +18,8 @@ import StorefrontLayout from '@/components/layout/StorefrontLayout';
 import Home from '@/routes/storefront/Home';
 import ProductList from '@/routes/storefront/ProductList';
 import ProductDetail from '@/routes/storefront/ProductDetail';
+import Cart from '@/routes/storefront/Cart';
+import Checkout from '@/routes/storefront/Checkout';
 
 const queryClient = new QueryClient();
 
@@ -61,6 +63,8 @@ function App() {
             <Route index element={<Home />} />
             <Route path="products" element={<ProductList />} />
             <Route path="products/:slug" element={<ProductDetail />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="checkout" element={<Checkout />} />
           </Route>
         </Routes>
       </BrowserRouter>
