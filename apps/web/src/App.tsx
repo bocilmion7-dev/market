@@ -13,6 +13,8 @@ import Approvals from '@/routes/admin/Approvals';
 import PublisherLayout from '@/components/layout/PublisherLayout';
 import PublisherDashboard from '@/routes/publisher/Dashboard';
 import PublisherProducts from '@/routes/publisher/Products';
+import PublisherOrders from '@/routes/publisher/Orders';
+import PublisherOrderDetail from '@/routes/publisher/OrderDetail';
 import ProductForm from '@/routes/publisher/ProductForm';
 import StorefrontLayout from '@/components/layout/StorefrontLayout';
 import Home from '@/routes/storefront/Home';
@@ -58,6 +60,8 @@ function App() {
             <Route path="products" element={<PublisherProducts />} />
             <Route path="products/new" element={<ProductForm />} />
             <Route path="products/:id" element={<ProductForm />} />
+            <Route path="orders" element={<PublisherOrders />} />
+            <Route path="orders/:id" element={<PublisherOrderDetail />} />
           </Route>
           <Route path="/" element={<StorefrontLayout />}>
             <Route index element={<Home />} />

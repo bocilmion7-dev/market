@@ -5,6 +5,7 @@ import { useLogout } from '@/features/auth/hooks';
 const navItems = [
   { label: 'Dashboard', path: '/publisher' },
   { label: 'My Products', path: '/publisher/products' },
+  { label: 'Orders', path: '/publisher/orders' },
 ];
 
 export default function PublisherLayout() {
