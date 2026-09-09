@@ -2,6 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-brand-surface text-brand-dark;
+@layer base {
+  :root {
+    --bg-primary: 255 255 255;
+    --bg-secondary: 245 245 245;
+    --bg-tertiary: 229 229 229;
+    --text-primary: 10 10 10;
+    --text-secondary: 82 82 82;
+    --text-muted: 115 115 115;
+    --border: 229 229 229;
+  }
+
+  .dark {
+    --bg-primary: 15 15 15;
+    --bg-secondary: 26 26 26;
+    --bg-tertiary: 38 38 38;
+    --text-primary: 250 250 250;
+    --text-secondary: 163 163 163;
+    --text-muted: 115 115 115;
+    --border: 38 38 38;
+  }
+
+  body {
+    @apply bg-[rgb(var(--bg-primary))] text-[rgb(var(--text-primary))];
+    @apply min-h-[100dvh];
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  * {
+    @apply transition-colors duration-150;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      @apply !transition-none;
+      animation: none !important;
+    }
+  }
+}
+
+@layer components {
+  .skeleton {
+    @apply bg-gradient-to-r from-[rgb(var(--bg-tertiary))] via-[rgb(var(--bg-secondary))] to-[rgb(var(--bg-tertiary))];
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
+
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
 }

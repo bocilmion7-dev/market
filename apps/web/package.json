@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.60.0",
+    "clsx": "^2.1.1",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "react-helmet-async": "^2.0.5",
     "react-router-dom": "^6.28.0",
+    "tailwind-merge": "^3.6.0",
     "zustand": "^5.0.0"
   },
   "devDependencies": {
