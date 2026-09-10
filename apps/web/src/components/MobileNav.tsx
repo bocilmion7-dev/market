@@ -20,7 +20,7 @@ export default function MobileNav() {
     <div className="md:hidden">
       <div className="flex items-center justify-between p-4 bg-brand-dark text-white">
         <Link to="/" className="text-lg font-bold">Marketplace</Link>
-        <button onClick={() => setIsOpen(!isOpen)} className="p-2">
+        <button onClick={() => setIsOpen(!isOpen)} className="p-2 rounded-sm">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {isOpen ? (
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -50,7 +50,7 @@ export default function MobileNav() {
               <>
                 {user.roles?.includes('ADMIN_MAKER') && <Link to="/admin" onClick={() => setIsOpen(false)} className="block py-2 hover:text-brand-accent">Admin</Link>}
                 {user.roles?.includes('PRODUCT_PUBLISHER') && <Link to="/publisher" onClick={() => setIsOpen(false)} className="block py-2 hover:text-brand-accent">Publisher</Link>}
-                <button onClick={() => { useAuthStore.getState().logout(); setIsOpen(false); }} className="block py-2 text-red-400 hover:text-red-300">Logout</button>
+                <button onClick={() => { useAuthStore.getState().logout(); setIsOpen(false); }} className="block py-2 text-red-400 hover:text-red-300 rounded-sm">Logout</button>
               </>
             ) : (
               <Link to="/login" onClick={() => setIsOpen(false)} className="block py-2 hover:text-brand-accent">Login</Link>

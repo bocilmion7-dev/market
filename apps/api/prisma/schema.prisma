@@ -227,6 +227,7 @@ model Product {
   cartItems        CartItem[]
   orderItems       OrderItem[]
   reviews          Review[]
+  discussions      Discussion[]
   wishlistItems    WishlistItem[]
 
   @@index([publisherId])
@@ -542,6 +543,23 @@ model Review {
   @@index([productId])
   @@index([orderItemId])
   @@map("reviews")
+}
+
+model Discussion {
+  id           String   @id @default(uuid())
+  productId    String   @map("product_id")
+  customerName String   @map("customer_name") @db.VarChar(150)
+  email        String   @db.VarChar(255)
+  question     String   @db.Text
+  answer       String?  @db.Text
+  answeredBy   String?  @map("answered_by") @db.VarChar(150)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([productId])
+  @@map("discussions")
 }
 
 model AuditLog {

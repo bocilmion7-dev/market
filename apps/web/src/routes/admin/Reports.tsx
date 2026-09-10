@@ -16,7 +16,7 @@ export default function Reports() {
       <div className="flex gap-2 mb-6">
         <button
           onClick={() => setActiveTab('sales')}
-          className={`px-4 py-2 ${
+          className={`px-4 py-2 rounded-sm ${
             activeTab === 'sales' ? 'bg-brand-accent text-white' : 'bg-white border'
           }`}
         >
@@ -24,7 +24,7 @@ export default function Reports() {
         </button>
         <button
           onClick={() => setActiveTab('publishers')}
-          className={`px-4 py-2 ${
+          className={`px-4 py-2 rounded-sm ${
             activeTab === 'publishers' ? 'bg-brand-accent text-white' : 'bg-white border'
           }`}
         >

@@ -18,7 +18,7 @@ export default function AdminBrands() {
 
       <form onSubmit={handleCreate} className="flex gap-2 mb-6">
         <input placeholder="Brand name" value={name} onChange={(e) => setName(e.target.value)} className="border px-3 py-2 flex-1" required />
-        <button type="submit" className="bg-brand-accent text-white px-4 py-2 hover:bg-brand-accent-dark">Add</button>
+        <button type="submit" className="bg-brand-accent text-white px-4 py-2 hover:bg-brand-accent-dark rounded-sm">Add</button>
       </form>
 
       <div className="bg-white shadow">
@@ -27,7 +27,7 @@ export default function AdminBrands() {
             {brands?.map((brand: any) => (
               <li key={brand.id} className="flex justify-between items-center p-3">
                 <span>{brand.name} <span className="text-gray-400 text-sm">({brand.slug})</span></span>
-                <button onClick={() => deleteBrand.mutate(brand.id)} className="text-red-500 hover:text-red-700 text-sm">Delete</button>
+                <button onClick={() => deleteBrand.mutate(brand.id)} className="text-red-500 hover:text-red-700 text-sm rounded-sm">Delete</button>
               </li>
             ))}
           </ul>

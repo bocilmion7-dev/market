@@ -28,7 +28,7 @@ export default function PublisherLayout() {
           <div className="flex items-center justify-between h-14 px-4">
             <button
               onClick={() => setDrawerOpen(true)}
-              className="p-2 -ml-2 hover:bg-[rgb(var(--bg-tertiary))] touch-target"
+              className="p-2 -ml-2 hover:bg-[rgb(var(--bg-tertiary))] touch-target rounded-sm"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -69,7 +69,7 @@ export default function PublisherLayout() {
         </nav>
         <div className="p-4 border-t border-[rgb(var(--border))]">
           <p className="text-xs text-[rgb(var(--text-muted))] mb-2">{user?.email}</p>
-          <button onClick={() => logout.mutate()} className="text-sm text-semantic-error hover:text-red-600">Logout</button>
+          <button onClick={() => logout.mutate()} className="text-sm text-semantic-error hover:text-red-600 rounded-sm">Logout</button>
         </div>
       </aside>
       <main className="flex-1 bg-[rgb(var(--bg-secondary))] overflow-auto">

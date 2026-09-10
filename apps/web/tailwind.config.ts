@@ -23,7 +23,7 @@ const config: Config = {
         },
       },
       borderRadius: {
-        'sm': '4px',
+        'sm': '5px',
         'DEFAULT': '8px',
         'lg': '12px',
         'xl': '16px',

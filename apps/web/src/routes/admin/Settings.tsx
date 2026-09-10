@@ -49,7 +49,7 @@ export default function AdminSettings() {
         <h2 className="text-lg font-semibold mb-4">Site Name</h2>
         <div className="flex items-center gap-2">
           <input value={siteName} onChange={(e) => setSiteName(e.target.value)} className="border px-3 py-2 flex-1" />
-          <button onClick={handleSaveSiteName} disabled={updateSiteName.isPending} className="bg-brand-accent text-white px-4 py-2 disabled:opacity-50">
+          <button onClick={handleSaveSiteName} disabled={updateSiteName.isPending} className="bg-brand-accent text-white px-4 py-2 disabled:opacity-50 rounded-sm">
             {updateSiteName.isPending ? 'Saving...' : 'Save'}
           </button>
         </div>
@@ -61,7 +61,7 @@ export default function AdminSettings() {
         <div className="flex items-center gap-2">
           <input type="number" value={fee} onChange={(e) => setFee(Number(e.target.value))} min={0} max={100} className="border px-3 py-2 w-24" />
           <span className="text-gray-500">%</span>
-          <button onClick={handleSaveFee} className="bg-brand-accent text-white px-4 py-2 ml-auto">Save</button>
+          <button onClick={handleSaveFee} className="bg-brand-accent text-white px-4 py-2 ml-auto rounded-sm">Save</button>
         </div>
       </div>
 
@@ -94,7 +94,7 @@ export default function AdminSettings() {
             <textarea value={footer.description} onChange={(e) => setFooter({ ...footer, description: e.target.value })} className="border px-3 py-2 w-full h-20" />
           </div>
         </div>
-        <button onClick={handleSaveFooter} disabled={updateSiteFooter.isPending} className="mt-4 bg-brand-accent text-white px-4 py-2 disabled:opacity-50">
+        <button onClick={handleSaveFooter} disabled={updateSiteFooter.isPending} className="mt-4 bg-brand-accent text-white px-4 py-2 disabled:opacity-50 rounded-sm">
           {updateSiteFooter.isPending ? 'Saving...' : 'Save Footer'}
         </button>
       </div>
@@ -103,7 +103,7 @@ export default function AdminSettings() {
       <div className="bg-white shadow p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Home Banner Slides (max 5)</h2>
-          <button onClick={addBanner} disabled={banners.length >= 5} className="bg-brand-accent text-white px-3 py-1.5 text-sm disabled:opacity-50">+ Add Banner</button>
+          <button onClick={addBanner} disabled={banners.length >= 5} className="bg-brand-accent text-white px-3 py-1.5 text-sm disabled:opacity-50 rounded-sm">+ Add Banner</button>
         </div>
         <div className="space-y-4">
           {banners.map((b, idx) => (
@@ -114,7 +114,7 @@ export default function AdminSettings() {
                   <label className="flex items-center gap-1 text-sm">
                     <input type="checkbox" checked={b.active} onChange={(e) => updateBanner(idx, 'active', e.target.checked)} /> Active
                   </label>
-                  <button onClick={() => removeBanner(idx)} className="text-red-500 text-sm">Remove</button>
+                  <button onClick={() => removeBanner(idx)} className="text-red-500 text-sm rounded-sm">Remove</button>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -128,7 +128,7 @@ export default function AdminSettings() {
           ))}
           {banners.length === 0 && <p className="text-sm text-gray-400">No banners yet.</p>}
         </div>
-        <button onClick={handleSaveBanners} disabled={updateBanners.isPending} className="mt-4 bg-brand-accent text-white px-4 py-2 text-sm disabled:opacity-50">
+        <button onClick={handleSaveBanners} disabled={updateBanners.isPending} className="mt-4 bg-brand-accent text-white px-4 py-2 text-sm disabled:opacity-50 rounded-sm">
           {updateBanners.isPending ? 'Saving...' : 'Save Banners'}
         </button>
       </div>

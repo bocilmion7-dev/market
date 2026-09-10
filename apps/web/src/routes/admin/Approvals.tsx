@@ -56,10 +56,10 @@ export default function Approvals() {
                   <td className="p-3 text-sm text-gray-500">{new Date(p.updatedAt).toLocaleDateString()}</td>
                   <td className="p-3">
                     <div className="flex gap-2">
-                      <button onClick={() => handleApprove(p.id)} className="bg-green-500 text-white px-3 py-1 text-sm hover:bg-green-600">
+                      <button onClick={() => handleApprove(p.id)} className="bg-green-500 text-white px-3 py-1 text-sm hover:bg-green-600 rounded-sm">
                         Approve
                       </button>
-                      <button onClick={() => setRejectModal(p.id)} className="bg-red-500 text-white px-3 py-1 text-sm hover:bg-red-600">
+                      <button onClick={() => setRejectModal(p.id)} className="bg-red-500 text-white px-3 py-1 text-sm hover:bg-red-600 rounded-sm">
                         Reject
                       </button>
                     </div>
@@ -76,7 +76,7 @@ export default function Approvals() {
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-3 py-1 border disabled:opacity-50"
+            className="px-3 py-1 border disabled:opacity-50 rounded-sm"
           >
             Previous
           </button>
@@ -84,7 +84,7 @@ export default function Approvals() {
           <button
             onClick={() => setPage(p => p + 1)}
             disabled={page >= data.totalPages}
-            className="px-3 py-1 border disabled:opacity-50"
+            className="px-3 py-1 border disabled:opacity-50 rounded-sm"
           >
             Next
           </button>
@@ -103,8 +103,8 @@ export default function Approvals() {
               required
             />
             <div className="flex gap-2 justify-end">
-              <button onClick={() => { setRejectModal(null); setRejectReason(''); }} className="border px-4 py-2">Cancel</button>
-              <button onClick={handleReject} disabled={!rejectReason} className="bg-red-500 text-white px-4 py-2 disabled:opacity-50">Reject</button>
+              <button onClick={() => { setRejectModal(null); setRejectReason(''); }} className="border px-4 py-2 rounded-sm">Cancel</button>
+              <button onClick={handleReject} disabled={!rejectReason} className="bg-red-500 text-white px-4 py-2 disabled:opacity-50 rounded-sm">Reject</button>
             </div>
           </div>
         </div>

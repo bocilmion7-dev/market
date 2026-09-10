@@ -14,9 +14,9 @@ export default function PublisherOrders() {
       <h1 className="text-2xl font-bold mb-6">My Orders</h1>
 
       <div className="flex gap-2 mb-6">
-        <button onClick={() => setStatus('')} className={`px-3 py-1 text-sm ${!status ? 'bg-brand-accent text-white' : 'bg-white border'}`}>All</button>
+        <button onClick={() => setStatus('')} className={`px-3 py-1 text-sm rounded-sm ${!status ? 'bg-brand-accent text-white' : 'bg-white border'}`}>All</button>
         {STATUS_OPTIONS.map((s) => (
-          <button key={s} onClick={() => setStatus(s)} className={`px-3 py-1 text-sm ${status === s ? 'bg-brand-accent text-white' : 'bg-white border'}`}>{s}</button>
+          <button key={s} onClick={() => setStatus(s)} className={`px-3 py-1 text-sm rounded-sm ${status === s ? 'bg-brand-accent text-white' : 'bg-white border'}`}>{s}</button>
         ))}
       </div>
 

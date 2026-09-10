@@ -1,20 +1,35 @@
 import { prisma } from '../lib/prisma';
 
 export async function getHomepage() {
-  const [featuredProducts, categories] = await Promise.all([
+  const [latestProducts, categories, bestsellingProducts, allProducts] = await Promise.all([
     prisma.product.findMany({
       where: { status: 'PUBLISHED' },
       include: { media: true, category: true, publisher: true },
-      take: 8,
+      take: 10,
       orderBy: { createdAt: 'desc' },
     }),
     prisma.category.findMany({
       where: { status: 'ACTIVE' },
       orderBy: { name: 'asc' },
     }),
+    prisma.product.findMany({
+      where: { status: 'PUBLISHED' },
+      include: { media: true, category: true, publisher: true },
+      take: 10,
+      orderBy: { orderItems: { _count: 'desc' } },
+    }),
+    prisma.product.findMany({
+      where: { status: 'PUBLISHED' },
+      include: { media: true, category: true, publisher: true },
+      orderBy: { createdAt: 'desc' },
+    }),
   ]);
 
-  return { featuredProducts, categories };
+  // Shuffle and take 40 random products
+  const shuffled = [...allProducts].sort(() => Math.random() - 0.5);
+  const randomProducts = shuffled.slice(0, Math.min(40, shuffled.length));
+
+  return { latestProducts, categories, bestsellingProducts, randomProducts };
 }
 
 export async function listProducts(filters: {
@@ -104,4 +119,19 @@ export async function getCategories() {
     where: { status: 'ACTIVE' },
     orderBy: { name: 'asc' },
   });
+}
+
+export async function getProductById(id: string) {
+  const product = await prisma.product.findUnique({
+    where: { id },
+    include: {
+      media: true,
+      category: true,
+      brand: true,
+      publisher: true,
+    },
+  });
+
+  if (!product || product.status !== 'PUBLISHED') return null;
+  return product;
 }

@@ -77,7 +77,7 @@ export default function AuditLogs() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-3 py-1 border disabled:opacity-50"
+            className="px-3 py-1 border disabled:opacity-50 rounded-sm"
           >
             Prev
           </button>
@@ -87,7 +87,7 @@ export default function AuditLogs() {
           <button
             onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))}
             disabled={page === data.totalPages}
-            className="px-3 py-1 border disabled:opacity-50"
+            className="px-3 py-1 border disabled:opacity-50 rounded-sm"
           >
             Next
           </button>

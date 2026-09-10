@@ -57,10 +57,10 @@ export default function FormBuilder({ fields, onChange }: FormBuilderProps) {
           <div className="flex justify-between items-center mb-2">
             <span className="font-medium">{field.label || field.fieldKey} <span className="text-gray-400 text-sm">({field.fieldType})</span></span>
             <div className="flex gap-1">
-              <button onClick={() => moveField(index, -1)} className="text-gray-400 hover:text-gray-600 text-sm">↑</button>
-              <button onClick={() => moveField(index, 1)} className="text-gray-400 hover:text-gray-600 text-sm">↓</button>
-              <button onClick={() => setEditing(editing === index ? null : index)} className="text-brand-accent text-sm">Edit</button>
-              <button onClick={() => removeField(index)} className="text-red-500 text-sm">Remove</button>
+              <button onClick={() => moveField(index, -1)} className="text-gray-400 hover:text-gray-600 text-sm rounded-sm">↑</button>
+              <button onClick={() => moveField(index, 1)} className="text-gray-400 hover:text-gray-600 text-sm rounded-sm">↓</button>
+              <button onClick={() => setEditing(editing === index ? null : index)} className="text-brand-accent text-sm rounded-sm">Edit</button>
+              <button onClick={() => removeField(index)} className="text-red-500 text-sm rounded-sm">Remove</button>
             </div>
           </div>
 
@@ -98,7 +98,7 @@ export default function FormBuilder({ fields, onChange }: FormBuilderProps) {
         </div>
       ))}
 
-      <button onClick={addField} className="border-2 border-dashed p-3 w-full text-gray-500 hover:text-brand-accent hover:border-brand-accent transition-colors">
+      <button onClick={addField} className="border-2 border-dashed p-3 w-full text-gray-500 hover:text-brand-accent hover:border-brand-accent transition-colors rounded-sm">
         + Add Field
       </button>
     </div>

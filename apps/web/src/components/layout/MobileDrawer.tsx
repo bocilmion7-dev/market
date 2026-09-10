@@ -65,7 +65,7 @@ export default function MobileDrawer({ links, title }: MobileDrawerProps) {
           <h2 className="text-lg font-bold">{title}</h2>
           <button
             onClick={() => setDrawerOpen(false)}
-            className="p-2 -mr-2 hover:bg-[rgb(var(--bg-tertiary))] touch-target"
+            className="p-2 -mr-2 hover:bg-[rgb(var(--bg-tertiary))] touch-target rounded-sm"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -99,7 +99,7 @@ export default function MobileDrawer({ links, title }: MobileDrawerProps) {
                 useAuthStore.getState().logout();
                 setDrawerOpen(false);
               }}
-              className="text-sm text-semantic-error hover:text-red-600 touch-target"
+              className="text-sm text-semantic-error hover:text-red-600 touch-target rounded-sm"
             >
               Logout
             </button>

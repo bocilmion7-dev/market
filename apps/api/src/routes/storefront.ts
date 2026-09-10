@@ -34,6 +34,14 @@ router.get('/products', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+router.get('/products/by-id/:id', async (req, res, next) => {
+  try {
+    const data = await storefrontService.getProductById(req.params.id);
+    if (!data) return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Product not found' } });
+    res.json({ success: true, data });
+  } catch (err) { next(err); }
+});
+
 router.get('/products/:slug', async (req, res, next) => {
   try {
     const data = await storefrontService.getProductBySlug(req.params.slug);

@@ -1,20 +1,57 @@
 import { Link } from 'react-router-dom';
 import { useCart, useUpdateCartItem, useRemoveFromCart } from '@/features/cart/hooks';
 import { useUIStore } from '@/stores/ui';
-import { Skeleton, EmptyState, Button } from '@/components/ui';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/lib/api';
+import { Skeleton, EmptyState } from '@/components/ui';
+
+interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  marketplacePrice: number;
+  media?: { url: string }[];
+  publisher?: { fullName: string; cityId?: string };
+}
+
+interface CartItem {
+  id: string;
+  productId: string;
+  quantity: number;
+  variantId?: string;
+}
 
 export default function Cart() {
-  const { data: items, isLoading } = useCart();
+  const { data: items = [], isLoading } = useCart();
   const updateItem = useUpdateCartItem();
   const removeItem = useRemoveFromCart();
   const addToast = useUIStore((s) => s.addToast);
 
-  const total = items?.reduce((sum: number, item: any) => {
-    const price = item.variant ? Number(item.variant.marketplacePrice) : Number(item.product.marketplacePrice);
-    return sum + price * item.quantity;
-  }, 0) || 0;
+  const cartItems = Array.isArray(items) ? items : [];
+  const productIds = cartItems.map((item: CartItem) => item.productId);
 
-  if (isLoading) {
+  // Fetch product details for cart items
+  const { data: products = {}, isLoading: loadingProducts } = useQuery<Record<string, Product>>({
+    queryKey: ['cartProducts', productIds],
+    queryFn: async () => {
+      if (productIds.length === 0) return {};
+      const results = await Promise.all(
+        productIds.map((id: string) => api.get<Product>(`/products/by-id/${id}`).catch(() => null))
+      );
+      const map: Record<string, Product> = {};
+      results.forEach((p) => { if (p) map[p.id] = p; });
+      return map;
+    },
+    enabled: productIds.length > 0,
+  });
+
+  const total = cartItems.reduce((sum: number, item: CartItem) => {
+    const product = products[item.productId];
+    const price = product ? Number(product.marketplacePrice) : 0;
+    return sum + price * item.quantity;
+  }, 0);
+
+  if (isLoading || loadingProducts) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
         <Skeleton className="h-8 w-48 mb-6" />
@@ -29,61 +66,72 @@ export default function Cart() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 md:py-8">
-      <h1 className="text-xl md:text-2xl font-bold mb-6">Shopping Cart</h1>
+      <h1 className="text-xl md:text-2xl font-bold mb-6">Keranjang Belanja</h1>
 
-      {!items || items.length === 0 ? (
+      {cartItems.length === 0 ? (
         <div className="bg-[rgb(var(--bg-primary))]">
           <EmptyState
-            title="Your cart is empty"
-            description="Add some products to get started"
-            action={{ label: "Browse Products", onClick: () => window.location.href = '/products' }}
+            title="Keranjang kosong"
+            description="Tambahkan produk untuk mulai berbelanja"
+            action={{ label: "Jelajahi Produk", onClick: () => window.location.href = '/products' }}
           />
         </div>
       ) : (
         <>
           <div className="space-y-4">
-            {items.map((item: any) => {
-              const price = item.variant ? Number(item.variant.marketplacePrice) : Number(item.product.marketplacePrice);
+            {cartItems.map((item: CartItem) => {
+              const product = products[item.productId];
+              if (!product) return null;
+              const price = Number(product.marketplacePrice);
               return (
                 <div key={item.id} className="bg-[rgb(var(--bg-primary))] p-4 flex gap-4">
-                  <div className="w-16 h-16 md:w-20 md:h-20 bg-[rgb(var(--bg-tertiary))] flex-shrink-0 flex items-center justify-center">
-                    {item.product.media?.[0]?.url ? (
-                      <img src={item.product.media[0].url} alt="" className="w-full h-full object-cover" />
-                    ) : <span className="text-[rgb(var(--text-muted))] text-xs">No img</span>}
-                  </div>
+                  <Link to={`/products/${product.slug}`} className="w-16 h-16 md:w-20 md:h-20 bg-[rgb(var(--bg-tertiary))] flex-shrink-0 flex items-center justify-center">
+                    {product.media?.[0]?.url ? (
+                      <img src={product.media[0].url} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-[rgb(var(--text-muted))] text-xs">No img</span>
+                    )}
+                  </Link>
                   <div className="flex-1 min-w-0">
-                    <Link to={`/products/${item.product.slug}`} className="font-medium hover:text-brand-accent text-sm md:text-base truncate block">
-                      {item.product.name}
+                    <Link to={`/products/${product.slug}`} className="font-medium hover:text-brand-accent text-xs md:text-sm line-clamp-2 block">
+                      {product.name}
                     </Link>
-                    {item.variant && <p className="text-xs text-[rgb(var(--text-muted))]">{Object.values(item.variant.variantFormData).join(' / ')}</p>}
-                    <p className="text-brand-accent font-bold mt-1 text-sm md:text-base">Rp {price.toLocaleString()}</p>
+                    {product.publisher && (
+                      <p className="text-[10px] text-[rgb(var(--text-muted))] mt-0.5 flex items-center gap-1">
+                        <svg className="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016A3.001 3.001 0 0021 9.349m-18 0V6a3 3 0 013-3h9a3 3 0 013 3v3.349" />
+                        </svg>
+                        <span className="truncate">{product.publisher.fullName}</span>
+                      </p>
+                    )}
+                    <p className="text-brand-accent font-bold mt-1 text-xs md:text-sm whitespace-nowrap">Rp {price.toLocaleString()}</p>
                   </div>
                   <div className="flex flex-col items-end justify-between">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       <button
-                        onClick={() => updateItem.mutate({ id: item.id, quantity: item.quantity - 1 })}
-                        className="w-8 h-8 border border-[rgb(var(--border))] flex items-center justify-center hover:bg-[rgb(var(--bg-tertiary))] touch-target"
+                        onClick={() => updateItem.mutate({ id: item.id, quantity: Math.max(1, item.quantity - 1) })}
+                        className="w-6 h-6 flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold rounded-sm transition-colors"
                       >
                         -
                       </button>
-                      <span className="w-8 text-center text-sm">{item.quantity}</span>
+                      <span className="w-6 text-center text-xs font-medium">{item.quantity}</span>
                       <button
                         onClick={() => updateItem.mutate({ id: item.id, quantity: item.quantity + 1 })}
-                        className="w-8 h-8 border border-[rgb(var(--border))] flex items-center justify-center hover:bg-[rgb(var(--bg-tertiary))] touch-target"
+                        className="w-6 h-6 flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold rounded-sm transition-colors"
                       >
                         +
                       </button>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-sm">Rp {(price * item.quantity).toLocaleString()}</p>
+                      <p className="font-bold text-sm whitespace-nowrap">Rp {(price * item.quantity).toLocaleString()}</p>
                       <button
                         onClick={() => {
                           removeItem.mutate(item.id);
-                          addToast('Item removed from cart', 'success');
+                          addToast('Item dihapus dari keranjang', 'success');
                         }}
-                        className="text-semantic-error text-xs mt-1 touch-target"
+                        className="text-semantic-error text-xs mt-1 touch-target rounded-sm"
                       >
-                        Remove
+                        Hapus
                       </button>
                     </div>
                   </div>
@@ -99,9 +147,9 @@ export default function Cart() {
             </div>
             <Link
               to="/checkout"
-              className="block w-full bg-brand-accent text-white text-center py-3 font-semibold hover:bg-brand-accent-dark active:scale-[0.98] transition-all touch-target"
+              className="block w-full bg-brand-accent text-white text-center py-3 font-semibold hover:bg-brand-accent-dark active:scale-[0.98] transition-all touch-target rounded-sm"
             >
-              Proceed to Checkout
+              Checkout
             </Link>
           </div>
         </>

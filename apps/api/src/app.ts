@@ -13,12 +13,12 @@ import adminApprovalRoutes from './routes/admin/approval';
 import publisherProductRoutes from './routes/publisher/products';
 import publisherOrderRoutes from './routes/publisher/orders';
 import storefrontRoutes from './routes/storefront';
-import cartRoutes from './routes/cart';
 import orderRoutes from './routes/orders';
 import paymentRoutes from './routes/payment';
 import shippingRoutes from './routes/shipping';
 import notificationRoutes from './routes/notifications';
 import reviewRoutes from './routes/reviews';
+import discussionRoutes from './routes/discussions';
 import wishlistRoutes from './routes/wishlist';
 import adminReportRoutes from './routes/admin/reports';
 import adminBannerRoutes from './routes/admin/banners';
@@ -45,12 +45,12 @@ app.use('/api/admin', adminApprovalRoutes);
 app.use('/api/publisher/products', publisherProductRoutes);
 app.use('/api/publisher/orders', publisherOrderRoutes);
 
-app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/shipping', shippingRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/discussions', discussionRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 
 app.use('/api/admin', adminReportRoutes);

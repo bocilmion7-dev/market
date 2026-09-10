@@ -23,6 +23,7 @@ import Home from '@/routes/storefront/Home';
 import ProductList from '@/routes/storefront/ProductList';
 import ProductDetail from '@/routes/storefront/ProductDetail';
 import Cart from '@/routes/storefront/Cart';
+import Wishlist from '@/routes/storefront/Wishlist';
 import Checkout from '@/routes/storefront/Checkout';
 import WriteReview from '@/routes/storefront/WriteReview';
 import ToastContainer from '@/components/ui/Toast';
@@ -75,6 +76,7 @@ function App() {
             <Route path="products" element={<ProductList />} />
             <Route path="products/:slug" element={<ProductDetail />} />
             <Route path="cart" element={<Cart />} />
+            <Route path="wishlist" element={<Wishlist />} />
             <Route path="checkout" element={<Checkout />} />
             <Route path="write-review/:productId" element={<WriteReview />} />
           </Route>

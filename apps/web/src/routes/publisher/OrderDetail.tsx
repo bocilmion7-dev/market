@@ -72,7 +72,7 @@ export default function PublisherOrderDetail() {
             ) : order.orderStatus === 'PAID' || order.orderStatus === 'PROCESSING' ? (
               <div className="flex gap-2">
                 <input value={awbNumber} onChange={(e) => setAwbNumber(e.target.value)} placeholder="Enter AWB number" className="flex-1 border px-3 py-2 text-sm" />
-                <button onClick={handleAddAWB} disabled={!awbNumber} className="bg-brand-accent text-white px-4 py-2 text-sm disabled:opacity-50">
+                <button onClick={handleAddAWB} disabled={!awbNumber} className="bg-brand-accent text-white px-4 py-2 text-sm disabled:opacity-50 rounded-sm">
                   Add
                 </button>
               </div>
@@ -85,16 +85,16 @@ export default function PublisherOrderDetail() {
             <h3 className="font-bold mb-3">Actions</h3>
             <div className="space-y-2">
               {order.orderStatus === 'PAID' && (
-                <button onClick={() => handleStatusUpdate('PROCESSING')} className="w-full bg-blue-500 text-white py-2 text-sm">Mark as Processing</button>
+                <button onClick={() => handleStatusUpdate('PROCESSING')} className="w-full bg-blue-500 text-white py-2 text-sm rounded-sm">Mark as Processing</button>
               )}
               {order.orderStatus === 'PROCESSING' && (
-                <button onClick={() => handleStatusUpdate('SHIPPED')} className="w-full bg-purple-500 text-white py-2 text-sm">Mark as Shipped</button>
+                <button onClick={() => handleStatusUpdate('SHIPPED')} className="w-full bg-purple-500 text-white py-2 text-sm rounded-sm">Mark as Shipped</button>
               )}
               {order.orderStatus === 'SHIPPED' && (
-                <button onClick={() => handleStatusUpdate('DELIVERED')} className="w-full bg-green-500 text-white py-2 text-sm">Mark as Delivered</button>
+                <button onClick={() => handleStatusUpdate('DELIVERED')} className="w-full bg-green-500 text-white py-2 text-sm rounded-sm">Mark as Delivered</button>
               )}
               {order.orderStatus === 'DELIVERED' && (
-                <button onClick={() => handleStatusUpdate('COMPLETED')} className="w-full bg-green-600 text-white py-2 text-sm">Mark as Completed</button>
+                <button onClick={() => handleStatusUpdate('COMPLETED')} className="w-full bg-green-600 text-white py-2 text-sm rounded-sm">Mark as Completed</button>
               )}
             </div>
           </div>

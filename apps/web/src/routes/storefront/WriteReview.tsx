@@ -24,7 +24,7 @@ export default function WriteReview() {
           <label className="block text-sm font-medium mb-2">Rating</label>
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
-              <button key={star} onClick={() => setRating(star)} className={`text-2xl ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}>★</button>
+              <button key={star} onClick={() => setRating(star)} className={`text-2xl rounded-sm ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}>★</button>
             ))}
           </div>
         </div>
@@ -39,7 +39,7 @@ export default function WriteReview() {
           />
         </div>
 
-        <button onClick={handleSubmit} disabled={createReview.isPending} className="w-full bg-brand-accent text-white py-2 disabled:opacity-50">
+        <button onClick={handleSubmit} disabled={createReview.isPending} className="w-full bg-brand-accent text-white py-2 disabled:opacity-50 rounded-sm">
           {createReview.isPending ? 'Submitting...' : 'Submit Review'}
         </button>
       </div>

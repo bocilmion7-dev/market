@@ -103,15 +103,15 @@ export default function ProductForm() {
         </div>
 
         <div className="flex gap-2 pt-4">
-          <button type="submit" className="bg-brand-accent text-white px-6 py-2">
+          <button type="submit" className="bg-brand-accent text-white px-6 py-2 rounded-sm">
             {isEdit ? 'Update' : 'Save Draft'}
           </button>
           {isEdit && existingProduct?.status === 'DRAFT' && (
-            <button type="button" onClick={handleSubmitForApproval} className="bg-green-600 text-white px-6 py-2">
+            <button type="button" onClick={handleSubmitForApproval} className="bg-green-600 text-white px-6 py-2 rounded-sm">
               Submit for Approval
             </button>
           )}
-          <button type="button" onClick={() => navigate('/publisher/products')} className="border px-6 py-2">Cancel</button>
+          <button type="button" onClick={() => navigate('/publisher/products')} className="border px-6 py-2 rounded-sm">Cancel</button>
         </div>
       </form>
     </div>
