@@ -90,8 +90,20 @@
 - [x] API integration tests (11 passing)
 - [x] Production build setup
 
+### Phase 16: UI Polish (DONE)
+- [x] Standardize rounded-sm (5px) on all buttons across 22+ files
+- [x] Product cards: line-clamp-2 names, consistent price position (flex/mt-auto)
+- [x] Cart: smaller +/- buttons (orange/white), publisher info, price whitespace-nowrap
+- [x] Wishlist: product name 2 lines, price 1 line
+- [x] Footer: redesigned shipping & payment logos (no scroll, center, no duplicates)
+- [x] Banner: hide arrow navigation, keep dot indicators
+- [x] Product detail: move question form below tabs, above related products
+- [x] ProductList: icons on mobile category slider, remove Supported Couriers section
+- [x] getCategoryIcon utility for category-specific icons
+
 ## Git History
 ```
+e2063ed feat: UI polish - rounded-sm, product cards, cart, footer, banner
 50ec052 feat: API tests and production build setup
 d5b5a34 feat: SEO, responsive design, and wishlist
 72f9edf feat: admin reports, audit logs, and dashboard
