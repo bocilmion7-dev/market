@@ -119,7 +119,12 @@ export async function getUserOrders(userId: string, page = 1, limit = 20) {
   const [orders, total] = await Promise.all([
     prisma.order.findMany({
       where,
-      include: { items: true, payment: true, publisher: true },
+      include: {
+        items: true,
+        payment: true,
+        publisher: true,
+        shipment: { include: { tracking: { orderBy: { eventTime: 'asc' } } } },
+      },
       skip: (page - 1) * limit,
       take: limit,
       orderBy: { createdAt: 'desc' },
@@ -138,7 +143,13 @@ export async function getOrderDetail(userId: string, orderId: string) {
 
   const order = await prisma.order.findUnique({
     where: { id: orderId },
-    include: { items: true, payment: true, shippingAddress: true, publisher: true },
+    include: {
+      items: true,
+      payment: true,
+      shippingAddress: true,
+      publisher: true,
+      shipment: { include: { tracking: { orderBy: { eventTime: 'asc' } } } },
+    },
   });
   if (!order || order.customerId !== customer.id) throw new AppError(404, 'NOT_FOUND', 'Order not found');
   return order;

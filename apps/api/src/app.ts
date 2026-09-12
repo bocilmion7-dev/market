@@ -22,6 +22,7 @@ import discussionRoutes from './routes/discussions';
 import wishlistRoutes from './routes/wishlist';
 import adminReportRoutes from './routes/admin/reports';
 import adminBannerRoutes from './routes/admin/banners';
+import shipmentRoutes from './routes/shipments';
 
 const app = express();
 
@@ -52,6 +53,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/discussions', discussionRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/shipments', shipmentRoutes);
 
 app.use('/api/admin', adminReportRoutes);
 app.use('/api/admin/banners', adminBannerRoutes);

@@ -26,6 +26,8 @@ import Cart from '@/routes/storefront/Cart';
 import Wishlist from '@/routes/storefront/Wishlist';
 import Checkout from '@/routes/storefront/Checkout';
 import WriteReview from '@/routes/storefront/WriteReview';
+import Orders from '@/routes/storefront/Orders';
+import OrderDetail from '@/routes/storefront/OrderDetail';
 import ToastContainer from '@/components/ui/Toast';
 
 const queryClient = new QueryClient();
@@ -79,6 +81,8 @@ function App() {
             <Route path="wishlist" element={<Wishlist />} />
             <Route path="checkout" element={<Checkout />} />
             <Route path="write-review/:productId" element={<WriteReview />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="orders/:id" element={<OrderDetail />} />
           </Route>
         </Routes>
       </BrowserRouter>

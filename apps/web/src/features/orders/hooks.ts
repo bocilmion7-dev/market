@@ -37,3 +37,26 @@ export function useAddAWB() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['publisher', 'orders'] }),
   });
 }
+
+export function useMyOrders(page = 1) {
+  return useQuery({
+    queryKey: ['myOrders', page],
+    queryFn: () => api.get<any>(`/orders?page=${page}`),
+  });
+}
+
+export function useMyOrderDetail(id: string) {
+  return useQuery({
+    queryKey: ['myOrder', id],
+    queryFn: () => api.get<any>(`/orders/${id}`),
+    enabled: !!id,
+  });
+}
+
+export function useShipmentTracking(shipmentId: string) {
+  return useQuery({
+    queryKey: ['shipmentTracking', shipmentId],
+    queryFn: () => api.get<any>(`/shipments/${shipmentId}/tracking`),
+    enabled: !!shipmentId,
+  });
+}
