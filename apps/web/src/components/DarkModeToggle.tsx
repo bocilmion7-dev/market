@@ -12,8 +12,8 @@ export default function DarkModeToggle() {
     if (savedTheme) {
       setTheme(savedTheme);
     } else {
-      setTheme('dark');
-      localStorage.setItem('theme', 'dark');
+      setTheme('light');
+      localStorage.setItem('theme', 'light');
     }
 
     const applyTheme = (t: string) => {

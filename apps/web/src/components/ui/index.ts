@@ -8,3 +8,6 @@ export { default as Modal } from './Modal';
 export { default as Toast } from './Toast';
 export { default as Skeleton } from './Skeleton';
 export { default as EmptyState } from './EmptyState';
+export { default as ImageUpload } from './ImageUpload';
+export { default as PageTransition } from './PageTransition';
+export { default as AnimatedIcon } from './AnimatedIcon';

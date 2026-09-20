@@ -17,8 +17,10 @@ export function useMe() {
   useEffect(() => {
     if (query.data) {
       setUser(query.data);
+    } else if (query.isError) {
+      setUser(null);
     }
-  }, [query.data, setUser]);
+  }, [query.data, query.isError, setUser]);
 
   return query;
 }
@@ -27,10 +29,17 @@ export function useLogin() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   return useMutation({
-    mutationFn: (credentials: { email: string; password: string }) =>
-      api.post<User>('/auth/login', credentials),
+    mutationFn: async (credentials: { email: string; password: string }) => {
+      const user = await api.post<User>('/auth/login', credentials);
+      // Merge guest wishlist after login
+      try {
+        await api.post('/wishlist/merge');
+      } catch {}
+      return user;
+    },
     onSuccess: (data: User) => {
       queryClient.setQueryData(['auth', 'me'], data);
+      queryClient.invalidateQueries({ queryKey: ['wishlist'] });
       if (data.roles.includes('ADMIN_MAKER')) {
         navigate('/admin');
       } else if (data.roles.includes('PRODUCT_PUBLISHER')) {

@@ -32,5 +32,6 @@ export async function login(email: string, password: string) {
     fullName: user.fullName,
     roles: user.roles.map((ur) => ur.role.name),
     publisherProfileId: user.publisherProfile?.id,
+    publisherProfileComplete: !!user.publisherProfile?.address && !!user.publisherProfile?.provinceId && !!user.publisherProfile?.cityId && !!user.publisherProfile?.districtId && !!user.publisherProfile?.postalCode,
   };
 }

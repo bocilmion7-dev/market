@@ -1,18 +1,33 @@
 {
   "name": "marketplace",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "dev:web": "npm run dev --workspace=apps/web",
-    "dev:api": "npm run dev --workspace=apps/api",
-    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
-    "build": "npm run build --workspace=apps/web && npm run build --workspace=apps/api",
-    "db:migrate": "npm run migrate --workspace=apps/api",
-    "db:seed": "npm run seed --workspace=apps/api",
-    "db:studio": "npm run studio --workspace=apps/api"
+    "start": "node server.js",
+    "postinstall": "npx prisma generate --schema=apps/api/prisma/schema.prisma",
+    "db:migrate": "npx prisma migrate deploy --schema=apps/api/prisma/schema.prisma"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "@types/compression": "^1.8.1",
+    "bcrypt": "^5.1.1",
+    "compression": "^1.8.2",
+    "connect-pg-simple": "^10.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "express": "^4.21.0",
+    "express-rate-limit": "^7.4.0",
+    "express-session": "^1.18.0",
+    "helmet": "^8.0.0",
+    "multer": "^1.4.5-lts.1",
+    "prisma": "^6.1.0",
+    "zod": "^3.23.0"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0",
-    "typescript": "^5.6.0"
+    "@types/bcrypt": "^6.0.0",
+    "@types/connect-pg-simple": "^7.0.3",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/express-session": "^1.19.0",
+    "@types/node": "^26.6.2"
   }
 }

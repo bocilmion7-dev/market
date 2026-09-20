@@ -40,7 +40,7 @@ export async function listUsers(page = 1, limit = 20, search?: string) {
   };
 }
 
-export async function createUser(data: { email: string; password: string; fullName: string; phone?: string; role: string }) {
+export async function createUser(data: { email: string; password: string; fullName: string; phone?: string; role: string; publisherProfile?: { address?: string; provinceId?: string; provinceName?: string; cityId?: string; cityName?: string; districtId?: string; districtName?: string; postalCode?: string } }) {
   const existing = await prisma.user.findUnique({ where: { email: data.email } });
   if (existing) {
     throw new AppError(400, 'VALIDATION_ERROR', 'Email already exists');
@@ -64,15 +64,20 @@ export async function createUser(data: { email: string; password: string; fullNa
   }
 
   if (data.role === 'PRODUCT_PUBLISHER') {
+    const p = data.publisherProfile || {};
     await prisma.publisherProfile.create({
       data: {
         userId: user.id,
         fullName: data.fullName,
         phone: data.phone || '',
-        address: '',
-        provinceId: '',
-        cityId: '',
-        districtId: '',
+        address: p.address || '',
+        provinceId: p.provinceId || '',
+        provinceName: p.provinceName || '',
+        cityId: p.cityId || '',
+        cityName: p.cityName || '',
+        districtId: p.districtId || '',
+        districtName: p.districtName || '',
+        postalCode: p.postalCode || null,
       },
     });
   }
@@ -80,11 +85,51 @@ export async function createUser(data: { email: string; password: string; fullNa
   return { id: user.id, email: user.email, fullName: user.fullName };
 }
 
-export async function updateUser(id: string, data: { fullName?: string; phone?: string; status?: string }) {
-  const user = await prisma.user.findUnique({ where: { id } });
+export async function updateUser(id: string, data: { fullName?: string; phone?: string; status?: string; publisherProfile?: { address?: string; provinceId?: string; provinceName?: string; cityId?: string; cityName?: string; districtId?: string; districtName?: string; postalCode?: string } }) {
+  const user = await prisma.user.findUnique({ where: { id }, include: { publisherProfile: true, roles: { include: { role: true } } } });
   if (!user) throw new AppError(404, 'NOT_FOUND', 'User not found');
 
-  const updated = await prisma.user.update({ where: { id }, data });
+  const updateData: any = {};
+  if (data.fullName !== undefined) updateData.fullName = data.fullName;
+  if (data.phone !== undefined) updateData.phone = data.phone;
+  if (data.status !== undefined) updateData.status = data.status;
+
+  const updated = await prisma.user.update({ where: { id }, data: updateData });
+
+  if (user.publisherProfile && data.publisherProfile) {
+    const p = data.publisherProfile;
+    await prisma.publisherProfile.update({
+      where: { userId: id },
+      data: {
+        ...(p.address !== undefined && { address: p.address }),
+        ...(p.provinceId !== undefined && { provinceId: p.provinceId }),
+        ...(p.provinceName !== undefined && { provinceName: p.provinceName }),
+        ...(p.cityId !== undefined && { cityId: p.cityId }),
+        ...(p.cityName !== undefined && { cityName: p.cityName }),
+        ...(p.districtId !== undefined && { districtId: p.districtId }),
+        ...(p.districtName !== undefined && { districtName: p.districtName }),
+        ...(p.postalCode !== undefined && { postalCode: p.postalCode }),
+      },
+    });
+  } else if (!user.publisherProfile && data.publisherProfile && user.roles.some(ur => ur.role.name === 'PRODUCT_PUBLISHER')) {
+    const p = data.publisherProfile;
+    await prisma.publisherProfile.create({
+      data: {
+        userId: id,
+        fullName: updated.fullName,
+        phone: updated.phone || '',
+        address: p.address || '',
+        provinceId: p.provinceId || '',
+        provinceName: p.provinceName || '',
+        cityId: p.cityId || '',
+        cityName: p.cityName || '',
+        districtId: p.districtId || '',
+        districtName: p.districtName || '',
+        postalCode: p.postalCode || null,
+      },
+    });
+  }
+
   return { id: updated.id, email: updated.email, fullName: updated.fullName, status: updated.status };
 }
 

@@ -22,6 +22,9 @@ interface Brand {
 
 interface Settings {
   admin_fee_percentage?: { percentage: number };
+  site_name?: { name: string };
+  site_footer?: { address: string; phone: string; email: string; mapUrl: string; mapEmbedUrl: string; description: string };
+  announcement_text?: { text: string };
 }
 
 interface PaginatedPendingProducts {
@@ -182,7 +185,7 @@ export function useUpdateBanners() {
 export function useSiteSettings() {
   return useQuery({
     queryKey: ['site-settings'],
-    queryFn: () => api.get<{ siteName: string; siteFooter: any }>('/site-settings'),
+    queryFn: () => api.get<{ siteName: string; siteFooter: any; announcementText: string }>('/site-settings'),
   });
 }
 
@@ -199,5 +202,102 @@ export function useUpdateSiteFooter() {
   return useMutation({
     mutationFn: (footer: any) => api.put('/admin/settings/site-footer', footer),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['site-settings'] }),
+  });
+}
+
+export function useUpdateAnnouncement() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (text: string) => api.put('/admin/settings/announcement', { text }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['site-settings'] }),
+  });
+}
+
+// Shipping Settings
+export function useShippingProviders() {
+  return useQuery({
+    queryKey: ['admin', 'shipping-providers'],
+    queryFn: () => api.get<any[]>('/admin/settings/shipping-providers'),
+  });
+}
+
+export function useUpdateShippingProviders() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (providers: any[]) => api.put('/admin/settings/shipping-providers', { providers }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'shipping-providers'] }),
+  });
+}
+
+export function useActiveCouriers() {
+  return useQuery({
+    queryKey: ['admin', 'active-couriers'],
+    queryFn: () => api.get<any[]>('/admin/settings/active-couriers'),
+  });
+}
+
+export function useUpdateActiveCouriers() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (couriers: any[]) => api.put('/admin/settings/active-couriers', { couriers }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'active-couriers'] }),
+  });
+}
+
+// Midtrans Settings
+export function useMidtransSettings() {
+  return useQuery({
+    queryKey: ['admin', 'midtrans-settings'],
+    queryFn: () => api.get<{ serverKey: string; clientKey: string; isProduction: boolean }>('/admin/settings/midtrans'),
+  });
+}
+
+export function useUpdateMidtransSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { serverKey: string; clientKey: string; isProduction: boolean }) => api.put('/admin/settings/midtrans', data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'midtrans-settings'] }),
+  });
+}
+
+// QRIS Settings
+export function useQrisSettings() {
+  return useQuery({
+    queryKey: ['admin', 'qris-settings'],
+    queryFn: () => api.get<{ enabled: boolean; qrImageUrl: string }>('/admin/settings/qris'),
+  });
+}
+
+export function useUpdateQrisSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { enabled: boolean; qrImageUrl: string }) => api.put('/admin/settings/qris', data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'qris-settings'] }),
+  });
+}
+
+// WhatsApp Settings
+export function useWhatsappSettings() {
+  return useQuery({
+    queryKey: ['admin', 'whatsapp-settings'],
+    queryFn: () => api.get<{ phoneNumber: string }>('/admin/settings/whatsapp'),
+  });
+}
+
+export function useUpdateWhatsappSettings() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { phoneNumber: string }) => api.put('/admin/settings/whatsapp', data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'whatsapp-settings'] }),
+  });
+}
+
+// Public payment settings (for storefront)
+export function usePaymentPublicSettings(options?: { enabled?: boolean }) {
+  return useQuery({
+    queryKey: ['payment-public-settings'],
+    queryFn: () => api.get<{ qris: { enabled: boolean; qrImageUrl: string }; whatsapp: { phoneNumber: string } }>('/admin/settings/payment-public'),
+    enabled: options?.enabled !== false,
+    staleTime: 300_000,
   });
 }

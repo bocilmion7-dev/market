@@ -6,7 +6,7 @@ import { createUserSchema, updateUserSchema, updateUserRolesSchema } from '../..
 import * as userService from '../../services/user.service';
 import { audit } from '../../middleware/audit';
 
-const router = Router();
+const router: Router = Router();
 
 router.get('/', authenticate, authorize('ADMIN_MAKER'), async (req, res, next) => {
   try {
@@ -27,14 +27,14 @@ router.post('/', authenticate, authorize('ADMIN_MAKER'), validate(createUserSche
 
 router.patch('/:id', authenticate, authorize('ADMIN_MAKER'), validate(updateUserSchema), audit('USER_UPDATE', 'User'), async (req, res, next) => {
   try {
-    const data = await userService.updateUser(req.params.id, req.body);
+    const data = await userService.updateUser(req.params.id as string, req.body);
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });
 
 router.patch('/:id/roles', authenticate, authorize('ADMIN_MAKER'), validate(updateUserRolesSchema), audit('USER_ROLE_CHANGE', 'User'), async (req, res, next) => {
   try {
-    const data = await userService.updateUserRoles(req.params.id, req.body.roles);
+    const data = await userService.updateUserRoles(req.params.id as string, req.body.roles);
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });

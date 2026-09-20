@@ -5,7 +5,7 @@ import * as authService from '../services/auth.service';
 import { authenticate } from '../middleware/auth';
 import { authLimiter } from '../middleware/rateLimiter';
 
-const router = Router();
+const router: Router = Router();
 
 router.post('/login', authLimiter, validate(loginSchema), async (req, res, next) => {
   try {

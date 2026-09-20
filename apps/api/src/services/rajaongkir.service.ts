@@ -1,34 +1,35 @@
 const RAJAONGKIR_API_KEY = process.env.RAJAONGKIR_API_KEY || '';
-const RAJAONGKIR_API_URL = process.env.RAJAONGKIR_API_URL || 'https://api.rajaongkir.com/starter';
-const RAJAONGKIR_TRACKING_URL = process.env.RAJAONGKIR_TRACKING_URL || 'https://rajaongkir.komerce.id/api/v1';
+const RAJAONGKIR_API_URL = process.env.RAJAONGKIR_API_URL || 'https://rajaongkir.komerce.id/api/v1';
 
 interface RajaOngkirCostResult {
-  cost: { value: number; etd: string; note: string }[];
+  name: string;
+  code: string;
   service: string;
   description: string;
+  cost: number;
+  etd: string;
 }
 
-export async function getProvinces(): Promise<any[]> {
-  const response = await fetch(`${RAJAONGKIR_API_URL}/province`, {
-    headers: { key: RAJAONGKIR_API_KEY, type: 'city' },
+async function fetchJson(url: string, options?: RequestInit): Promise<any> {
+  const response = await fetch(url, options);
+  const text = await response.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error(`API response not JSON (status ${response.status}): ${text.substring(0, 200)}`);
+  }
+}
+
+export async function searchDestinations(search: string, limit = 10): Promise<any[]> {
+  const url = new URL(`${RAJAONGKIR_API_URL}/destination/domestic-destination`);
+  url.searchParams.set('search', search);
+  url.searchParams.set('limit', String(limit));
+  url.searchParams.set('offset', '0');
+
+  const data = await fetchJson(url.toString(), {
+    headers: { key: RAJAONGKIR_API_KEY },
   });
-  const data = await response.json() as any;
-  return data.rajaongkir?.results || [];
-}
-
-export async function getCities(provinceId?: string): Promise<any[]> {
-  const url = provinceId ? `${RAJAONGKIR_API_URL}/city?province=${provinceId}` : `${RAJAONGKIR_API_URL}/city`;
-  const response = await fetch(url, {
-    headers: { key: RAJAONGKIR_API_KEY, type: 'city' },
-  });
-  const data = await response.json() as any;
-  return data.rajaongkir?.results || [];
-}
-
-export async function getAreaId(areaName: string): Promise<string> {
-  const cities = await getCities();
-  const city = cities.find((c: any) => c.city_name.toLowerCase().includes(areaName.toLowerCase()));
-  return city?.city_id || '152';
+  return data.data || [];
 }
 
 export async function calculateShippingCost(
@@ -37,9 +38,14 @@ export async function calculateShippingCost(
   weight: number,
   courier: string
 ): Promise<RajaOngkirCostResult[]> {
-  const body = new URLSearchParams({ origin, destination, weight: String(weight), courier });
+  const body = new URLSearchParams({
+    origin,
+    destination,
+    weight: String(weight),
+    courier,
+  });
 
-  const response = await fetch(`${RAJAONGKIR_API_URL}/cost`, {
+  const data = await fetchJson(`${RAJAONGKIR_API_URL}/calculate/domestic-cost`, {
     method: 'POST',
     headers: {
       key: RAJAONGKIR_API_KEY,
@@ -48,16 +54,7 @@ export async function calculateShippingCost(
     body: body.toString(),
   });
 
-  const data = await response.json() as any;
-  return data.rajaongkir?.results || [];
-}
-
-export async function getDistricts(cityId: string): Promise<any[]> {
-  const response = await fetch(`${RAJAONGKIR_API_URL}/subdistrict?city=${cityId}`, {
-    headers: { key: RAJAONGKIR_API_KEY, type: 'city' },
-  });
-  const data = await response.json() as any;
-  return data.rajaongkir?.results || [];
+  return data.data || [];
 }
 
 export interface TrackingEvent {
@@ -91,18 +88,16 @@ export interface TrackingResult {
 }
 
 export async function trackWaybill(awb: string, courier: string): Promise<TrackingResult | null> {
-  const url = new URL(`${RAJAONGKIR_TRACKING_URL}/track/waybill`);
+  const url = new URL(`${RAJAONGKIR_API_URL}/track/waybill`);
   url.searchParams.set('awb', awb);
   url.searchParams.set('courier', courier);
 
-  const response = await fetch(url.toString(), {
+  const data = await fetchJson(url.toString(), {
     method: 'POST',
     headers: {
       key: RAJAONGKIR_API_KEY,
     },
   });
-
-  const data = await response.json() as any;
 
   if (!data.data) {
     return null;

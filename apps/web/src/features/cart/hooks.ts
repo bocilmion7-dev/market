@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { api } from '@/lib/api';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Any = any;
@@ -92,13 +93,26 @@ export function useCreateOrder() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: Any) => {
-      // This would need to call the real API for order creation
-      // For now, clear cart after order
-      localStorage.removeItem(CART_KEY);
-      return Promise.resolve(data);
+      return api.post<any>('/orders', {
+        shippingAddressId: data.shippingAddressId,
+        recipientName: data.recipientName,
+        recipientPhone: data.recipientPhone,
+        shippingService: data.shippingService,
+        shippingCourier: data.shippingCourier,
+        shippingCost: data.shippingCost,
+        notes: data.notes,
+        items: data.items,
+        destinationCityId: data.destinationCityId,
+        destinationCityName: data.destinationCityName,
+        destinationProvinceName: data.destinationProvinceName,
+        destinationDistrictName: data.destinationDistrictName,
+        destinationPostalCode: data.destinationPostalCode,
+      });
     },
     onSuccess: () => {
+      localStorage.removeItem(CART_KEY);
       qc.invalidateQueries({ queryKey: ['cart'] });
+      qc.invalidateQueries({ queryKey: ['orders'] });
     },
   });
 }

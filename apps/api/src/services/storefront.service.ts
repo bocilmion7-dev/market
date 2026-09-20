@@ -1,7 +1,7 @@
 import { prisma } from '../lib/prisma';
 
 export async function getHomepage() {
-  const [latestProducts, categories, bestsellingProducts, allProducts] = await Promise.all([
+  const [latestProducts, categories, bestsellingProducts, totalPublished] = await Promise.all([
     prisma.product.findMany({
       where: { status: 'PUBLISHED' },
       include: { media: true, category: true, publisher: true },
@@ -18,16 +18,17 @@ export async function getHomepage() {
       take: 10,
       orderBy: { orderItems: { _count: 'desc' } },
     }),
-    prisma.product.findMany({
-      where: { status: 'PUBLISHED' },
-      include: { media: true, category: true, publisher: true },
-      orderBy: { createdAt: 'desc' },
-    }),
+    prisma.product.count({ where: { status: 'PUBLISHED' } }),
   ]);
 
-  // Shuffle and take 40 random products
-  const shuffled = [...allProducts].sort(() => Math.random() - 0.5);
-  const randomProducts = shuffled.slice(0, Math.min(40, shuffled.length));
+  const randomOffset = Math.max(0, Math.floor(Math.random() * Math.max(0, totalPublished - 40)));
+  const randomProducts = await prisma.product.findMany({
+    where: { status: 'PUBLISHED' },
+    include: { media: true, category: true, publisher: true },
+    skip: randomOffset,
+    take: 40,
+    orderBy: { createdAt: 'desc' },
+  });
 
   return { latestProducts, categories, bestsellingProducts, randomProducts };
 }

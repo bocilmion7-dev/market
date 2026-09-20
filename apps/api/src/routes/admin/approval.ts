@@ -1,11 +1,11 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { authenticate } from '../../middleware/auth';
 import { authorize } from '../../middleware/rbac';
 import { z } from 'zod';
 import { validate } from '../../middleware/validate';
 import * as approvalService from '../../services/approval.service';
 
-const router = Router();
+const router: Router = Router();
 
 router.get('/pending-products', authenticate, authorize('ADMIN_MAKER'), async (req, res, next) => {
   try {
@@ -15,18 +15,18 @@ router.get('/pending-products', authenticate, authorize('ADMIN_MAKER'), async (r
   } catch (err) { next(err); }
 });
 
-router.post('/products/:id/approve', authenticate, authorize('ADMIN_MAKER'), async (req, res, next) => {
+router.post('/products/:id/approve', authenticate, authorize('ADMIN_MAKER'), async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await approvalService.approveProduct(req.params.id, req.user!.id);
+    const data = await approvalService.approveProduct(req.params.id as string, req.user!.id);
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });
 
 router.post('/products/:id/reject', authenticate, authorize('ADMIN_MAKER'), validate(z.object({
   reason: z.string().min(1, 'Rejection reason is required'),
-})), async (req, res, next) => {
+})), async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await approvalService.rejectProduct(req.params.id, req.user!.id, req.body.reason);
+    const data = await approvalService.rejectProduct(req.params.id as string, req.user!.id, req.body.reason);
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });

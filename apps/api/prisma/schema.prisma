@@ -1,11 +1,13 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x", "debian-openssl-1.1.x"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 
 model User {
   id            String    @id @default(uuid())
@@ -67,17 +69,20 @@ model Session {
 }
 
 model PublisherProfile {
-  id         String  @id @default(uuid())
-  userId     String  @unique @map("user_id")
-  fullName   String  @map("full_name") @db.VarChar(150)
-  phone      String  @db.VarChar(30)
-  address    String  @db.Text
-  provinceId String  @map("province_id") @db.VarChar(50)
-  cityId     String  @map("city_id") @db.VarChar(50)
-  districtId String  @map("district_id") @db.VarChar(50)
-  postalCode String? @map("postal_code") @db.VarChar(10)
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  id           String  @id @default(uuid())
+  userId       String  @unique @map("user_id")
+  fullName     String  @map("full_name") @db.VarChar(150)
+  phone        String  @db.VarChar(30)
+  address      String  @db.Text
+  provinceId   String  @map("province_id") @db.VarChar(50)
+  provinceName String  @default("") @map("province_name") @db.VarChar(100)
+  cityId       String  @map("city_id") @db.VarChar(50)
+  cityName     String  @default("") @map("city_name") @db.VarChar(100)
+  districtId   String  @map("district_id") @db.VarChar(50)
+  districtName String  @default("") @map("district_name") @db.VarChar(100)
+  postalCode   String? @map("postal_code") @db.VarChar(10)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   user     User      @relation(fields: [userId], references: [id])
   products Product[]
@@ -211,6 +216,7 @@ model Product {
   marketplacePrice      Decimal  @map("marketplace_price") @db.Decimal(18, 2)
   sku                   String   @unique @db.VarChar(100)
   stock                 Int
+  weight                Int      @default(500)
   hasVariants           Boolean  @default(false) @map("has_variants")
   status                String   @db.VarChar(40)
   rejectionReason       String?  @map("rejection_reason") @db.Text
@@ -312,8 +318,11 @@ model CustomerAddress {
   phone         String   @db.VarChar(30)
   address       String   @db.Text
   provinceId    String   @map("province_id") @db.VarChar(50)
+  provinceName  String   @default("") @map("province_name") @db.VarChar(100)
   cityId        String   @map("city_id") @db.VarChar(50)
+  cityName      String   @default("") @map("city_name") @db.VarChar(100)
   districtId    String   @map("district_id") @db.VarChar(50)
+  districtName  String   @default("") @map("district_name") @db.VarChar(100)
   postalCode    String   @map("postal_code") @db.VarChar(10)
   createdAt     DateTime @default(now()) @map("created_at")
 
@@ -384,6 +393,9 @@ model Order {
   grandTotal                Decimal  @map("grand_total") @db.Decimal(18, 2)
   orderStatus               String   @map("order_status") @db.VarChar(40)
   paymentStatus             String   @map("payment_status") @db.VarChar(40)
+  shippingCourier           String?  @map("shipping_courier") @db.VarChar(100)
+  shippingService           String?  @map("shipping_service") @db.VarChar(100)
+  notes                     String?  @db.Text
   createdAt                 DateTime @default(now()) @map("created_at")
   updatedAt                 DateTime @updatedAt @map("updated_at")
 

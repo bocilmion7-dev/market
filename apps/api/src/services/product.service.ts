@@ -10,7 +10,9 @@ interface ProductInput {
   categoryFormData: Record<string, any>;
   bestPrice: number;
   stock: number;
+  weight: number;
   hasVariants: boolean;
+  media?: { url: string; altText?: string }[];
   variants?: {
     variantFormSchemaId: string;
     variantFormData: Record<string, any>;
@@ -68,6 +70,7 @@ export async function createProduct(publisherId: string, data: ProductInput) {
       marketplacePrice,
       sku,
       stock: data.stock,
+      weight: data.weight,
       hasVariants: data.hasVariants,
       status: 'DRAFT',
     },
@@ -96,6 +99,18 @@ export async function createProduct(publisherId: string, data: ProductInput) {
     }
   }
 
+  // Handle media
+  if (data.media && data.media.length > 0) {
+    await prisma.productMedia.createMany({
+      data: data.media.map((m, i) => ({
+        productId: product.id,
+        url: m.url,
+        altText: m.altText || data.name,
+        sortOrder: i,
+      })),
+    });
+  }
+
   return product;
 }
 
@@ -117,6 +132,10 @@ export async function updateProduct(publisherId: string, productId: string, data
   const updateData: any = { ...data };
   if (data.name) updateData.slug = createSlug(data.name);
 
+  // Remove media from updateData - handle separately
+  const mediaData = updateData.media;
+  delete updateData.media;
+
   if (data.bestPrice) {
     const adminFeeSetting = await prisma.setting.findUnique({ where: { key: 'admin_fee_percentage' } });
     const adminFeePercentage = (adminFeeSetting?.value as any)?.percentage || 10;
@@ -125,7 +144,26 @@ export async function updateProduct(publisherId: string, productId: string, data
     updateData.adminFeePercentage = adminFeePercentage;
   }
 
-  return prisma.product.update({ where: { id: productId }, data: updateData });
+  const updated = await prisma.product.update({ where: { id: productId }, data: updateData });
+
+  // Handle media update
+  if (mediaData && Array.isArray(mediaData)) {
+    // Delete existing media
+    await prisma.productMedia.deleteMany({ where: { productId } });
+    // Create new media
+    if (mediaData.length > 0) {
+      await prisma.productMedia.createMany({
+        data: mediaData.map((m: any, i: number) => ({
+          productId,
+          url: m.url,
+          altText: m.altText || updated.name,
+          sortOrder: i,
+        })),
+      });
+    }
+  }
+
+  return updated;
 }
 
 export async function submitForApproval(publisherId: string, productId: string) {

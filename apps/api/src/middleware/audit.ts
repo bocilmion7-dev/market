@@ -11,7 +11,7 @@ export function audit(action: string, entityType: string) {
             actorUserId: req.user.id,
             action,
             entityType,
-            entityId: req.params.id,
+            entityId: (req.params.id as string) || undefined,
             ipAddress: req.ip,
             userAgent: req.get('user-agent'),
           },

@@ -5,7 +5,7 @@ import { validate } from '../../middleware/validate';
 import { createProductSchema, updateProductSchema } from '../../validators/product.schema';
 import * as productService from '../../services/product.service';
 
-const router = Router();
+const router: Router = Router();
 
 router.get('/', authenticate, authorize('PRODUCT_PUBLISHER'), async (req, res, next) => {
   try {
@@ -24,21 +24,21 @@ router.post('/', authenticate, authorize('PRODUCT_PUBLISHER'), validate(createPr
 
 router.get('/:id', authenticate, authorize('PRODUCT_PUBLISHER'), async (req, res, next) => {
   try {
-    const data = await productService.getProduct(req.user!.publisherProfileId!, req.params.id);
+    const data = await productService.getProduct(req.user!.publisherProfileId!, req.params.id as string);
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });
 
 router.patch('/:id', authenticate, authorize('PRODUCT_PUBLISHER'), validate(updateProductSchema), async (req, res, next) => {
   try {
-    const data = await productService.updateProduct(req.user!.publisherProfileId!, req.params.id, req.body);
+    const data = await productService.updateProduct(req.user!.publisherProfileId!, req.params.id as string, req.body);
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });
 
 router.post('/:id/submit', authenticate, authorize('PRODUCT_PUBLISHER'), async (req, res, next) => {
   try {
-    const data = await productService.submitForApproval(req.user!.publisherProfileId!, req.params.id);
+    const data = await productService.submitForApproval(req.user!.publisherProfileId!, req.params.id as string);
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });

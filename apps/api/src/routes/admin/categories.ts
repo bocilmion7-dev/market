@@ -6,7 +6,7 @@ import { createCategorySchema, updateCategorySchema } from '../../validators/cat
 import * as categoryService from '../../services/category.service';
 import { audit } from '../../middleware/audit';
 
-const router = Router();
+const router: Router = Router();
 
 router.get('/', authenticate, authorize('ADMIN_MAKER'), async (req, res, next) => {
   try {
@@ -24,14 +24,14 @@ router.post('/', authenticate, authorize('ADMIN_MAKER'), validate(createCategory
 
 router.patch('/:id', authenticate, authorize('ADMIN_MAKER'), validate(updateCategorySchema), audit('CATEGORY_UPDATE', 'Category'), async (req, res, next) => {
   try {
-    const data = await categoryService.updateCategory(req.params.id, req.body);
+    const data = await categoryService.updateCategory(req.params.id as string, req.body);
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });
 
 router.delete('/:id', authenticate, authorize('ADMIN_MAKER'), audit('CATEGORY_DELETE', 'Category'), async (req, res, next) => {
   try {
-    await categoryService.deleteCategory(req.params.id);
+    await categoryService.deleteCategory(req.params.id as string);
     res.json({ success: true, message: 'Category deleted' });
   } catch (err) { next(err); }
 });

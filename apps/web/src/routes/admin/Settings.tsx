@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useSettings, useUpdateAdminFee, useBanners, useUpdateBanners, useUpdateSiteName, useUpdateSiteFooter } from '@/features/admin/hooks';
+import { useSettings, useUpdateAdminFee, useBanners, useUpdateBanners, useUpdateSiteName, useUpdateSiteFooter, useUpdateAnnouncement } from '@/features/admin/hooks';
+import { ImageUpload } from '@/components/ui';
 
 let bannerIdCounter = Date.now();
 function newId() { return String(bannerIdCounter++); }
@@ -21,11 +22,16 @@ export default function AdminSettings() {
   const [footer, setFooter] = useState({ address: '', phone: '', email: '', mapUrl: '', mapEmbedUrl: '', description: '' });
   const [footerLoaded, setFooterLoaded] = useState(false);
 
+  const updateAnnouncement = useUpdateAnnouncement();
+  const [announcement, setAnnouncement] = useState('');
+  const [announcementLoaded, setAnnouncementLoaded] = useState(false);
+
   useEffect(() => {
     if (settings?.admin_fee_percentage) setFee(settings.admin_fee_percentage.percentage);
     if (settings?.site_name?.name && !siteNameLoaded) { setSiteName(settings.site_name.name); setSiteNameLoaded(true); }
     if (settings?.site_footer && !footerLoaded) { setFooter(settings.site_footer); setFooterLoaded(true); }
-  }, [settings, siteNameLoaded, footerLoaded]);
+    if (settings?.announcement_text?.text !== undefined && !announcementLoaded) { setAnnouncement(settings.announcement_text.text); setAnnouncementLoaded(true); }
+  }, [settings, siteNameLoaded, footerLoaded, announcementLoaded]);
 
   useEffect(() => {
     if (bannersData) setBanners(bannersData.map((b: any) => ({ ...b, id: b.id || newId() })));
@@ -34,6 +40,7 @@ export default function AdminSettings() {
   const handleSaveFee = () => updateAdminFee.mutate(fee);
   const handleSaveSiteName = () => updateSiteName.mutate(siteName);
   const handleSaveFooter = () => updateSiteFooter.mutate(footer);
+  const handleSaveAnnouncement = () => updateAnnouncement.mutate(announcement);
 
   const handleSaveBanners = () => updateBanners.mutate(banners);
   const addBanner = () => { if (banners.length < 5) setBanners([...banners, { id: newId(), title: '', subtitle: '', imageUrl: '', link: '', active: true }]); };
@@ -51,6 +58,18 @@ export default function AdminSettings() {
           <input value={siteName} onChange={(e) => setSiteName(e.target.value)} className="border px-3 py-2 flex-1" />
           <button onClick={handleSaveSiteName} disabled={updateSiteName.isPending} className="bg-brand-accent text-white px-4 py-2 disabled:opacity-50 rounded-sm">
             {updateSiteName.isPending ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+      </div>
+
+      {/* Announcement Text */}
+      <div className="bg-white shadow p-6 max-w-md">
+        <h2 className="text-lg font-semibold mb-4">Announcement Bar</h2>
+        <p className="text-sm text-gray-500 mb-3">Text shown in the scrolling announcement bar at the top of the storefront. Leave empty to hide.</p>
+        <div className="flex items-center gap-2">
+          <input value={announcement} onChange={(e) => setAnnouncement(e.target.value)} className="border px-3 py-2 flex-1" placeholder="e.g. Gratis ongkir untuk pembelian di atas Rp500.000!" />
+          <button onClick={handleSaveAnnouncement} disabled={updateAnnouncement.isPending} className="bg-brand-accent text-white px-4 py-2 disabled:opacity-50 rounded-sm">
+            {updateAnnouncement.isPending ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
@@ -105,7 +124,7 @@ export default function AdminSettings() {
           <h2 className="text-lg font-semibold">Home Banner Slides (max 5)</h2>
           <button onClick={addBanner} disabled={banners.length >= 5} className="bg-brand-accent text-white px-3 py-1.5 text-sm disabled:opacity-50 rounded-sm">+ Add Banner</button>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-6">
           {banners.map((b, idx) => (
             <div key={b.id} className="border p-4 space-y-3">
               <div className="flex items-center justify-between">
@@ -120,10 +139,15 @@ export default function AdminSettings() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <input placeholder="Title" value={b.title} onChange={(e) => updateBanner(idx, 'title', e.target.value)} className="border px-3 py-2 text-sm" />
                 <input placeholder="Subtitle" value={b.subtitle} onChange={(e) => updateBanner(idx, 'subtitle', e.target.value)} className="border px-3 py-2 text-sm" />
-                <input placeholder="Image URL" value={b.imageUrl} onChange={(e) => updateBanner(idx, 'imageUrl', e.target.value)} className="border px-3 py-2 text-sm" />
                 <input placeholder="Link (e.g. /products?categoryId=...)" value={b.link} onChange={(e) => updateBanner(idx, 'link', e.target.value)} className="border px-3 py-2 text-sm" />
               </div>
-              {b.imageUrl && <img src={b.imageUrl} alt={b.title} className="h-20 object-cover" />}
+              <ImageUpload
+                value={b.imageUrl}
+                onChange={(url) => updateBanner(idx, 'imageUrl', url)}
+                folder="banners"
+                label="Banner Image"
+                previewClassName="w-full h-32"
+              />
             </div>
           ))}
           {banners.length === 0 && <p className="text-sm text-gray-400">No banners yet.</p>}

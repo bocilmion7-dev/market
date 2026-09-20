@@ -454,12 +454,50 @@ async function main() {
     }
   }
 
+  // Seed Midtrans settings
+  await prisma.setting.upsert({
+    where: { key: 'midtrans_settings' },
+    update: {},
+    create: {
+      key: 'midtrans_settings',
+      value: {
+        serverKey: 'SB-Mid-server-zO_rd9X2I9VoyI_QTy3VteRk',
+        clientKey: 'SB-Mid-client-_KFyRoGL7zAFY-Uo',
+        isProduction: false,
+      } as any,
+      updatedBy: adminUser.id,
+    },
+  });
+
+  // Seed QRIS settings
+  await prisma.setting.upsert({
+    where: { key: 'qris_settings' },
+    update: {},
+    create: {
+      key: 'qris_settings',
+      value: { enabled: false, qrImageUrl: '' } as any,
+      updatedBy: adminUser.id,
+    },
+  });
+
+  // Seed WhatsApp settings
+  await prisma.setting.upsert({
+    where: { key: 'whatsapp_settings' },
+    update: {},
+    create: {
+      key: 'whatsapp_settings',
+      value: { phoneNumber: '' } as any,
+      updatedBy: adminUser.id,
+    },
+  });
+
   console.log(`\nSeed completed!`);
   console.log(`  Categories: ${CATEGORIES.length}`);
   console.log(`  Brands: ${brandNames.length}`);
   console.log(`  Publishers: ${PUBLISHERS.length}`);
   console.log(`  Products: ${productCount}`);
   console.log(`  Variants: ~${productCount * 6} (6 per product)`);
+  console.log(`  Midtrans: sandbox keys seeded`);
 }
 
 main()

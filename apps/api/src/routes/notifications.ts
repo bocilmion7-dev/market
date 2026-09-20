@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
 import * as notificationService from '../services/notification.service';
 
-const router = Router();
+const router: Router = Router();
 
 router.get('/', authenticate, async (req, res, next) => {
   try {
@@ -14,7 +14,7 @@ router.get('/', authenticate, async (req, res, next) => {
 
 router.patch('/:id/read', authenticate, async (req, res, next) => {
   try {
-    await notificationService.markAsRead(req.user!.id, req.params.id);
+    await notificationService.markAsRead(req.user!.id, req.params.id as string);
     res.json({ success: true });
   } catch (err) { next(err); }
 });

@@ -4,7 +4,7 @@ import { authorize } from '../../middleware/rbac';
 import { audit } from '../../middleware/audit';
 import * as settingsService from '../../services/settings.service';
 
-const router = Router();
+const router: Router = Router();
 
 router.get('/', authenticate, authorize('ADMIN_MAKER'), async (req, res, next) => {
   try {

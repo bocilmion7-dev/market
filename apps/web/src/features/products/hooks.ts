@@ -10,6 +10,7 @@ interface PublisherProduct {
   bestPrice: number;
   marketplacePrice: number;
   stock: number;
+  weight: number;
   status: string;
   hasVariants: boolean;
   categoryFormData: Record<string, any>;

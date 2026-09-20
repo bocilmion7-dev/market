@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import * as storefrontService from '../services/storefront.service';
-import { getPublicBanners, getSiteName, getSiteFooter } from '../services/settings.service';
+import { getPublicBanners, getSiteName, getSiteFooter, getAnnouncementText } from '../services/settings.service';
 
-const router = Router();
+const router: Router = Router();
 
 router.get('/homepage', async (req, res, next) => {
   try {
@@ -14,8 +14,8 @@ router.get('/homepage', async (req, res, next) => {
 
 router.get('/site-settings', async (req, res, next) => {
   try {
-    const [siteName, siteFooter] = await Promise.all([getSiteName(), getSiteFooter()]);
-    res.json({ success: true, data: { siteName, siteFooter } });
+    const [siteName, siteFooter, announcementText] = await Promise.all([getSiteName(), getSiteFooter(), getAnnouncementText()]);
+    res.json({ success: true, data: { siteName, siteFooter, announcementText } });
   } catch (err) { next(err); }
 });
 
@@ -36,7 +36,7 @@ router.get('/products', async (req, res, next) => {
 
 router.get('/products/by-id/:id', async (req, res, next) => {
   try {
-    const data = await storefrontService.getProductById(req.params.id);
+    const data = await storefrontService.getProductById(req.params.id as string);
     if (!data) return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Product not found' } });
     res.json({ success: true, data });
   } catch (err) { next(err); }
@@ -44,7 +44,7 @@ router.get('/products/by-id/:id', async (req, res, next) => {
 
 router.get('/products/:slug', async (req, res, next) => {
   try {
-    const data = await storefrontService.getProductBySlug(req.params.slug);
+    const data = await storefrontService.getProductBySlug(req.params.slug as string);
     if (!data) return res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Product not found' } });
     res.json({ success: true, data });
   } catch (err) { next(err); }

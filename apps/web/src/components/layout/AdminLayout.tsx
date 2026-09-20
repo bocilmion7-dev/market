@@ -12,8 +12,11 @@ const navItems = [
   { label: 'Categories', path: '/admin/categories' },
   { label: 'Brands', path: '/admin/brands' },
   { label: 'Settings', path: '/admin/settings' },
+  { label: 'Shipping', path: '/admin/shipping' },
+  { label: 'Payment', path: '/admin/payment' },
   { label: 'Form Builder', path: '/admin/form-builder' },
   { label: 'Approvals', path: '/admin/approvals' },
+  { label: 'Orders', path: '/admin/orders' },
   { label: 'Reports', path: '/admin/reports' },
   { label: 'Audit Logs', path: '/admin/audit-logs' },
 ];
@@ -64,7 +67,7 @@ export default function AdminLayout() {
               key={item.path}
               to={item.path}
               className={`block px-3 py-2 text-sm transition-colors ${
-                location.pathname === item.path
+                location.pathname === item.path || (item.path !== '/admin' && location.pathname.startsWith(item.path))
                   ? 'bg-brand-accent text-white'
                   : 'text-[rgb(var(--text-secondary))] hover:bg-[rgb(var(--bg-tertiary))]'
               }`}

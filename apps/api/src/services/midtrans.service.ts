@@ -1,8 +1,8 @@
 import crypto from 'crypto';
+import { getMidtransSettings } from './settings.service';
 
-const MIDTRANS_SERVER_KEY = process.env.MIDTRANS_SERVER_KEY || '';
-const MIDTRANS_CLIENT_KEY = process.env.MIDTRANS_CLIENT_KEY || '';
-const MIDTRANS_API_URL = process.env.MIDTRANS_API_URL || 'https://api.sandbox.midtrans.com';
+const MIDTRANS_API_URL = 'https://api.sandbox.midtrans.com';
+const MIDTRANS_SNAP_URL = 'https://app.sandbox.midtrans.com';
 
 interface MidtransItem {
   id: string;
@@ -27,11 +27,17 @@ interface MidtransTransaction {
   callbacks?: { finish?: string };
 }
 
+async function getKeys() {
+  const settings = await getMidtransSettings();
+  return { serverKey: settings.serverKey, clientKey: settings.clientKey };
+}
+
 export function generateVAName(orderId: string, vaName?: string): string {
   return vaName || `MARKETPLACE-${orderId}`;
 }
 
 export async function createPaymentLink(orderId: string, amount: number, items: MidtransItem[], customer: MidtransCustomer): Promise<{ token: string; redirect_url: string }> {
+  const { serverKey } = await getKeys();
   const transaction: MidtransTransaction = {
     transaction_details: { order_id: orderId, gross_amount: amount },
     item_details: items,
@@ -43,7 +49,7 @@ export async function createPaymentLink(orderId: string, amount: number, items: 
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Basic ${Buffer.from(`${MIDTRANS_SERVER_KEY}:`).toString('base64')}`,
+      Authorization: `Basic ${Buffer.from(`${serverKey}:`).toString('base64')}`,
     },
     body: JSON.stringify(transaction),
   });
@@ -57,17 +63,18 @@ export async function createPaymentLink(orderId: string, amount: number, items: 
 }
 
 export async function createSnapTransaction(orderId: string, amount: number, items: MidtransItem[], customer: MidtransCustomer): Promise<{ token: string; redirect_url: string }> {
+  const { serverKey } = await getKeys();
   const transaction = {
     transaction_details: { order_id: orderId, gross_amount: amount },
     item_details: items,
     customer_details: customer,
   };
 
-  const response = await fetch(`${MIDTRANS_API_URL}/v2/snap/transaction`, {
+  const response = await fetch(`${MIDTRANS_SNAP_URL}/snap/v1/transactions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Basic ${Buffer.from(`${MIDTRANS_SERVER_KEY}:`).toString('base64')}`,
+      Authorization: `Basic ${Buffer.from(`${serverKey}:`).toString('base64')}`,
     },
     body: JSON.stringify(transaction),
   });
@@ -80,11 +87,11 @@ export async function createSnapTransaction(orderId: string, amount: number, ite
   return response.json() as Promise<{ token: string; redirect_url: string }>;
 }
 
-export function verifyNotification(notification: any): boolean {
+export async function verifyNotification(notification: any): Promise<boolean> {
+  const { serverKey } = await getKeys();
   const orderId = notification.order_id;
   const statusCode = notification.status_code;
   const grossAmount = notification.gross_amount;
-  const serverKey = MIDTRANS_SERVER_KEY;
 
   const signatureKey = `${orderId}${statusCode}${grossAmount}${serverKey}`;
   const signature = crypto.createHash('sha512').update(signatureKey).digest('hex');

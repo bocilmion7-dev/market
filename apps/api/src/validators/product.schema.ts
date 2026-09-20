@@ -8,6 +8,7 @@ export const createProductSchema = z.object({
   categoryFormData: z.record(z.any()),
   bestPrice: z.number().positive(),
   stock: z.number().int().min(0),
+  weight: z.number().int().min(1, 'Berat produk wajib diisi (minimal 1 gram)'),
   hasVariants: z.boolean().default(false),
   variants: z.array(z.object({
     variantFormSchemaId: z.string().uuid(),
@@ -25,5 +26,6 @@ export const updateProductSchema = z.object({
   categoryFormData: z.record(z.any()).optional(),
   bestPrice: z.number().positive().optional(),
   stock: z.number().int().min(0).optional(),
+  weight: z.number().int().min(1, 'Berat produk wajib diisi (minimal 1 gram)').optional(),
   brandId: z.string().uuid().optional(),
 });

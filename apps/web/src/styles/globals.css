@@ -11,6 +11,13 @@
     --text-secondary: 82 82 82;
     --text-muted: 115 115 115;
     --border: 229 229 229;
+
+    /* Motion tokens */
+    --dur-fast: 120ms;
+    --dur: 200ms;
+    --dur-slow: 400ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .dark {
@@ -29,29 +36,33 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  * {
-    @apply transition-colors duration-150;
-  }
-
+  /* Respect reduced motion preference */
   @media (prefers-reduced-motion: reduce) {
-    * {
-      @apply !transition-none;
-      animation: none !important;
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
 }
 
 @layer components {
+  /* Enhanced skeleton with shimmer */
   .skeleton {
     @apply bg-gradient-to-r from-[rgb(var(--bg-tertiary))] via-[rgb(var(--bg-secondary))] to-[rgb(var(--bg-tertiary))];
     background-size: 200% 100%;
     @apply animate-shimmer;
   }
 
+  /* Touch target for mobile */
   .touch-target {
     @apply min-h-[44px] min-w-[44px];
   }
 
+  /* Hide scrollbar */
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -59,5 +70,61 @@
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  /* Stagger animation for lists */
+  .stagger-in > * {
+    animation: fadeInUp 400ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
+
+  /* Scroll-triggered animation */
+  @media (prefers-reduced-motion: no-preference) {
+    .on-scroll {
+      animation: fadeInUp 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 35%;
+    }
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Hover scale effect */
+  .hover-scale {
+    transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hover-scale:hover {
+    transform: scale(1.02);
+  }
+  .hover-scale:active {
+    transform: scale(0.98);
+  }
+
+  /* Focus ring */
+  .focus-ring {
+    @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-accent;
+  }
+
+  /* Page transition wrapper */
+  .page-enter {
+    animation: fadeInUp 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

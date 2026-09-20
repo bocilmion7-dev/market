@@ -6,6 +6,7 @@ export interface User {
   fullName: string;
   roles: string[];
   publisherProfileId?: string;
+  publisherProfileComplete?: boolean;
 }
 
 interface AuthState {

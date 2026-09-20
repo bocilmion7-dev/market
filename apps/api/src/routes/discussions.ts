@@ -2,11 +2,11 @@ import { Router, NextFunction, Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
 import { z } from 'zod';
 
-const router = Router();
+const router: Router = Router();
 
 router.get('/products/:productId/discussions', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { productId } = req.params;
+    const { productId } = req.params as { productId: string };
     const discussions = await prisma.discussion.findMany({
       where: { productId },
       orderBy: { createdAt: 'desc' },
@@ -23,7 +23,7 @@ const createDiscussionSchema = z.object({
 
 router.post('/products/:productId/discussions', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { productId } = req.params;
+    const { productId } = req.params as { productId: string };
     const body = createDiscussionSchema.parse(req.body);
 
     const product = await prisma.product.findUnique({ where: { id: productId } });
@@ -46,7 +46,7 @@ router.post('/products/:productId/discussions', async (req: Request, res: Respon
 
 router.get('/products/:productId/reviews', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { productId } = req.params;
+    const { productId } = req.params as { productId: string };
     const reviews = await prisma.review.findMany({
       where: { productId, status: 'APPROVED' },
       orderBy: { createdAt: 'desc' },

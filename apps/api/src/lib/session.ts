@@ -3,7 +3,7 @@ import connectPgSimple from 'connect-pg-simple';
 
 const PgSession = connectPgSimple(session);
 
-export function setupSession() {
+export function setupSession(): ReturnType<typeof session> {
   return session({
     store: new PgSession({
       conString: process.env.DATABASE_URL,
@@ -16,7 +16,7 @@ export function setupSession() {
     cookie: {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.COOKIE_SECURE === 'true',
       sameSite: 'lax',
     },
   });

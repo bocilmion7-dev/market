@@ -4,12 +4,12 @@ import { z } from 'zod';
 import { validate } from '../middleware/validate';
 import * as reviewService from '../services/review.service';
 
-const router = Router();
+const router: Router = Router();
 
 router.get('/product/:productId', async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
-    const data = await reviewService.getProductReviews(req.params.productId, page);
+    const data = await reviewService.getProductReviews(req.params.productId as string, page);
     res.json({ success: true, data });
   } catch (err) { next(err); }
 });

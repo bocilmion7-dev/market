@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { validate } from '../middleware/validate';
 import * as paymentService from '../services/payment.service';
 
-const router = Router();
+const router: Router = Router();
 
 router.post('/initiate', authenticate, validate(z.object({
   orderId: z.string().uuid(),

@@ -134,6 +134,64 @@ d6e1012 feat: seed script with roles and initial admin
 - [ ] No email notifications (only in-app)
 - [ ] No rate limiting on storefront public routes
 
+## Session Progress (14 Sep 2026)
+
+### 1. Marquee Announcement Bar
+- [x] Backend: `announcement_text` setting di `settings.service.ts`, routes, storefront endpoint
+- [x] Frontend: `AnnouncementBar` component, 8 copy teks, `w-max` untuk smooth scroll
+- [x] Admin: input field di `Settings.tsx`, hook `useUpdateAnnouncement`
+- [x] Fix: marquee tidak jalan → `w-max` agar flex container tidak squeeze
+- [x] Pindah posisi: marquee di bawah header, sticky bersama header (`sticky top-0 z-40`)
+
+### 2. Toggle Sizes Matching
+- [x] Home.tsx toggle disamakan dengan ProductList.tsx (`px-3 py-1.5 text-sm` + teks label)
+
+### 3. Footer Redesign
+- [x] Hapus shipping/payment logo arrays dan `CourierLogo`/`PaymentLogo` components
+- [x] Brand name footer pakai `siteName` dari `useSiteSettings`
+
+### 4. Harga Coret Dihapus
+- [x] Strikethrough price di ProductDetail dihapus (bestPrice < marketplacePrice, bukan diskon)
+
+### 5. Mobile TopBar Logo
+- [x] Tambah `ShoppingBag` icon di `TopBar.tsx` sebelum nama brand
+
+### 6. ProductDetail UI Beautify
+- [x] Breadcrumb navigation
+- [x] Image: rounded-lg, shadow, hover zoom
+- [x] Category/brand: pill badges
+- [x] Harga: gradient background box
+- [x] Variant selector: border-2 + shadow saat aktif
+- [x] Stock/Seller: card dengan icon
+- [x] Trust badges (Garansi, Kirim Cepat, Dicek)
+- [x] Tabs: icons pada reviews/discussions
+- [x] Discussion answer: seller icon + bg accent
+- [x] Form: rounded-md + ring focus
+- [x] Related products: group hover zoom
+- [x] Tombol Beli/Cart/Wishlist dikembalikan seperti semula
+
+### 7. Default Theme Light
+- [x] `DarkModeToggle.tsx` default dari `'dark'` ke `'light'`
+
+### 8. Order Number Overflow Fix
+- [x] Font size diperkecil + `break-all`
+
+### Files Changed
+| File | Changes |
+|------|---------|
+| `apps/api/src/services/settings.service.ts` | + `getAnnouncementText`, `updateAnnouncementText` |
+| `apps/api/src/routes/admin/settings.ts` | + routes `/announcement` GET/PUT |
+| `apps/api/src/routes/storefront.ts` | + `announcementText` di site-settings |
+| `apps/web/tailwind.config.ts` | + `marquee` animation |
+| `apps/web/src/features/admin/hooks.ts` | + `useUpdateAnnouncement`, `announcement_text` type |
+| `apps/web/src/routes/admin/Settings.tsx` | + Announcement Bar input field |
+| `apps/web/src/components/layout/StorefrontLayout.tsx` | Marquee, hapus logos, footer pakai siteName |
+| `apps/web/src/components/layout/TopBar.tsx` | + logo icon, hapus sticky |
+| `apps/web/src/routes/storefront/Home.tsx` | Toggle sizes matched |
+| `apps/web/src/routes/storefront/ProductDetail.tsx` | Beautify UI, hapus harga coret |
+| `apps/web/src/routes/storefront/OrderDetail.tsx` | Fix order number overflow |
+| `apps/web/src/components/DarkModeToggle.tsx` | Default theme → light |
+
 ## How to Run
 ```bash
 cd /root/marketplace

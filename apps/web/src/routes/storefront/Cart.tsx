@@ -3,7 +3,8 @@ import { useCart, useUpdateCartItem, useRemoveFromCart } from '@/features/cart/h
 import { useUIStore } from '@/stores/ui';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
-import { Skeleton, EmptyState } from '@/components/ui';
+import { Skeleton, EmptyState, PageTransition } from '@/components/ui';
+import { ShoppingCart, Trash2, Plus, Minus, ArrowRight, Store } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -30,7 +31,6 @@ export default function Cart() {
   const cartItems = Array.isArray(items) ? items : [];
   const productIds = cartItems.map((item: CartItem) => item.productId);
 
-  // Fetch product details for cart items
   const { data: products = {}, isLoading: loadingProducts } = useQuery<Record<string, Product>>({
     queryKey: ['cartProducts', productIds],
     queryFn: async () => {
@@ -51,109 +51,140 @@ export default function Cart() {
     return sum + price * item.quantity;
   }, 0);
 
+  const totalItems = cartItems.reduce((sum: number, item: CartItem) => sum + item.quantity, 0);
+
   if (isLoading || loadingProducts) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
         <Skeleton className="h-8 w-48 mb-6" />
-        <div className="space-y-4">
-          {Array(3).fill(0).map((_, i) => (
-            <Skeleton key={i} className="h-24" />
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2 space-y-4">
+            {Array(3).fill(0).map((_, i) => (
+              <Skeleton key={i} className="h-28" />
+            ))}
+          </div>
+          <Skeleton className="h-48" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 md:py-8">
-      <h1 className="text-xl md:text-2xl font-bold mb-6">Keranjang Belanja</h1>
-
-      {cartItems.length === 0 ? (
-        <div className="bg-[rgb(var(--bg-primary))]">
-          <EmptyState
-            title="Keranjang kosong"
-            description="Tambahkan produk untuk mulai berbelanja"
-            action={{ label: "Jelajahi Produk", onClick: () => window.location.href = '/products' }}
-          />
+    <PageTransition>
+      <div className="max-w-4xl mx-auto px-4 py-6 md:py-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-sm bg-brand-accent/10 flex items-center justify-center">
+            <ShoppingCart className="w-5 h-5 text-brand-accent" />
+          </div>
+          <div>
+            <h1 className="text-xl md:text-2xl font-bold">Keranjang Belanja</h1>
+            <p className="text-sm text-[rgb(var(--text-muted))]">{totalItems} item</p>
+          </div>
         </div>
-      ) : (
-        <>
-          <div className="space-y-4">
-            {cartItems.map((item: CartItem) => {
-              const product = products[item.productId];
-              if (!product) return null;
-              const price = Number(product.marketplacePrice);
-              return (
-                <div key={item.id} className="bg-[rgb(var(--bg-primary))] p-4 flex gap-4">
-                  <Link to={`/products/${product.slug}`} className="w-16 h-16 md:w-20 md:h-20 bg-[rgb(var(--bg-tertiary))] flex-shrink-0 flex items-center justify-center">
-                    {product.media?.[0]?.url ? (
-                      <img src={product.media[0].url} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-[rgb(var(--text-muted))] text-xs">No img</span>
-                    )}
-                  </Link>
-                  <div className="flex-1 min-w-0">
-                    <Link to={`/products/${product.slug}`} className="font-medium hover:text-brand-accent text-xs md:text-sm line-clamp-2 block">
-                      {product.name}
+
+        {cartItems.length === 0 ? (
+          <div className="bg-[rgb(var(--bg-primary))] rounded-sm border border-[rgb(var(--border))]">
+            <EmptyState
+              title="Keranjang kosong"
+              description="Tambahkan produk untuk mulai berbelanja"
+              action={{ label: "Jelajahi Produk", onClick: () => window.location.href = '/products' }}
+            />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2 space-y-3">
+              {cartItems.map((item: CartItem) => {
+                const product = products[item.productId];
+                if (!product) return null;
+                const price = Number(product.marketplacePrice);
+                return (
+                  <div key={item.id} className="bg-[rgb(var(--bg-primary))] border border-[rgb(var(--border))] rounded-sm p-4 flex gap-4 hover:shadow-md transition-shadow">
+                    <Link to={`/products/${product.slug}`} className="w-20 h-20 md:w-24 md:h-24 bg-[rgb(var(--bg-tertiary))] flex-shrink-0 flex items-center justify-center overflow-hidden rounded-sm">
+                      {product.media?.[0]?.url ? (
+                        <img src={product.media[0].url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-[rgb(var(--text-muted))] text-xs">No img</span>
+                      )}
                     </Link>
-                    {product.publisher && (
-                      <p className="text-[10px] text-[rgb(var(--text-muted))] mt-0.5 flex items-center gap-1">
-                        <svg className="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016A3.001 3.001 0 0021 9.349m-18 0V6a3 3 0 013-3h9a3 3 0 013 3v3.349" />
-                        </svg>
-                        <span className="truncate">{product.publisher.fullName}</span>
-                      </p>
-                    )}
-                    <p className="text-brand-accent font-bold mt-1 text-xs md:text-sm whitespace-nowrap">Rp {price.toLocaleString()}</p>
+                    <div className="flex-1 min-w-0 flex flex-col">
+                      <Link to={`/products/${product.slug}`} className="font-medium hover:text-brand-accent text-sm md:text-base line-clamp-2">
+                        {product.name}
+                      </Link>
+                      {product.publisher && (
+                        <p className="text-xs text-[rgb(var(--text-muted))] mt-0.5 flex items-center gap-1">
+                          <Store className="w-3 h-3 flex-shrink-0" />
+                          <span className="truncate">{product.publisher.fullName}</span>
+                        </p>
+                      )}
+                      <div className="mt-auto pt-2 flex items-end justify-between">
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => updateItem.mutate({ id: item.id, quantity: Math.max(1, item.quantity - 1) })}
+                            className="w-7 h-7 flex items-center justify-center bg-[rgb(var(--bg-tertiary))] hover:bg-brand-accent hover:text-white text-[rgb(var(--text-secondary))] rounded-sm transition-colors"
+                          >
+                            <Minus className="w-3.5 h-3.5" />
+                          </button>
+                          <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
+                          <button
+                            onClick={() => updateItem.mutate({ id: item.id, quantity: item.quantity + 1 })}
+                            className="w-7 h-7 flex items-center justify-center bg-[rgb(var(--bg-tertiary))] hover:bg-brand-accent hover:text-white text-[rgb(var(--text-secondary))] rounded-sm transition-colors"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        <p className="font-bold text-brand-accent text-sm md:text-base whitespace-nowrap">Rp {(price * item.quantity).toLocaleString()}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        removeItem.mutate(item.id);
+                        addToast('Item dihapus dari keranjang', 'success');
+                      }}
+                      className="self-start p-1.5 text-[rgb(var(--text-muted))] hover:text-semantic-error hover:bg-red-50 dark:hover:bg-red-900/20 rounded-sm transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
-                  <div className="flex flex-col items-end justify-between">
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => updateItem.mutate({ id: item.id, quantity: Math.max(1, item.quantity - 1) })}
-                        className="w-6 h-6 flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold rounded-sm transition-colors"
-                      >
-                        -
-                      </button>
-                      <span className="w-6 text-center text-xs font-medium">{item.quantity}</span>
-                      <button
-                        onClick={() => updateItem.mutate({ id: item.id, quantity: item.quantity + 1 })}
-                        className="w-6 h-6 flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold rounded-sm transition-colors"
-                      >
-                        +
-                      </button>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-sm whitespace-nowrap">Rp {(price * item.quantity).toLocaleString()}</p>
-                      <button
-                        onClick={() => {
-                          removeItem.mutate(item.id);
-                          addToast('Item dihapus dari keranjang', 'success');
-                        }}
-                        className="text-semantic-error text-xs mt-1 touch-target rounded-sm"
-                      >
-                        Hapus
-                      </button>
-                    </div>
+                );
+              })}
+            </div>
+
+            <div className="md:col-span-1">
+              <div className="bg-[rgb(var(--bg-primary))] border border-[rgb(var(--border))] rounded-sm p-5 md:sticky md:top-20">
+                <h3 className="font-bold mb-4">Ringkasan</h3>
+                <div className="space-y-3 mb-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-[rgb(var(--text-muted))]">Item ({totalItems})</span>
+                    <span>Rp {total.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-[rgb(var(--text-muted))]">Ongkos Kirim</span>
+                    <span className="text-[rgb(var(--text-muted))]">Dihitung saat checkout</span>
+                  </div>
+                  <div className="border-t border-[rgb(var(--border))] pt-3 flex justify-between">
+                    <span className="font-bold">Total</span>
+                    <span className="text-lg font-bold text-brand-accent">Rp {total.toLocaleString()}</span>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-
-          <div className="bg-[rgb(var(--bg-primary))] p-4 md:p-6 mt-6 md:sticky md:top-20">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-lg">Total</span>
-              <span className="text-xl md:text-2xl font-bold text-brand-accent">Rp {total.toLocaleString()}</span>
+                <Link
+                  to="/checkout"
+                  className="flex items-center justify-center gap-2 w-full bg-brand-accent text-white py-3 font-semibold hover:bg-brand-accent-dark active:scale-[0.98] transition-all rounded-sm"
+                >
+                  Checkout
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  to="/products"
+                  className="flex items-center justify-center gap-2 w-full mt-3 py-2.5 text-sm text-brand-accent hover:bg-[rgb(var(--bg-secondary))] rounded-sm transition-colors"
+                >
+                  <Store className="w-4 h-4" />
+                  Lanjut Belanja
+                </Link>
+              </div>
             </div>
-            <Link
-              to="/checkout"
-              className="block w-full bg-brand-accent text-white text-center py-3 font-semibold hover:bg-brand-accent-dark active:scale-[0.98] transition-all touch-target rounded-sm"
-            >
-              Checkout
-            </Link>
           </div>
-        </>
-      )}
-    </div>
+        )}
+      </div>
+    </PageTransition>
   );
 }
