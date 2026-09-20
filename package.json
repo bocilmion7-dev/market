@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "start": "node server.js",
+    "build": "npx tsc -p apps/api/tsconfig.json && cd apps/web && npm install && npm run build",
     "postinstall": "npx prisma generate --schema=apps/api/prisma/schema.prisma",
     "db:migrate": "npx prisma migrate deploy --schema=apps/api/prisma/schema.prisma"
   },
