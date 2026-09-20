@@ -1,9 +1,9 @@
 {
   "buildCommand": "npm run build",
-  "installCommand": "npm install && npm run postinstall",
+  "installCommand": "npm install",
   "outputDirectory": "apps/web/dist",
-  "regions": ["sin1"],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api" }
+    { "source": "/api/:path*", "destination": "/api" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

@@ -83,21 +83,13 @@ app.use('/api/admin/orders', adminOrderRoutes);
 
 app.use('/api', storefrontLimiter, storefrontRoutes);
 
-// Production: serve React frontend
-if (process.env.NODE_ENV === 'production') {
+// Production: serve React frontend (non-Vercel deployments)
+if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
   const frontendPath = path.join(__dirname, '../../web/dist');
-  const fs = require('fs');
-  if (fs.existsSync(frontendPath)) {
-    app.use(express.static(frontendPath, { maxAge: '1y', immutable: true }));
-    app.get('*', (req, res) => {
-      const indexPath = path.join(frontendPath, 'index.html');
-      if (fs.existsSync(indexPath)) {
-        res.sendFile(indexPath);
-      } else {
-        res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Page not found' } });
-      }
-    });
-  }
+  app.use(express.static(frontendPath, { maxAge: '1y', immutable: true }));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+  });
 }
 
 app.use(errorHandler);
