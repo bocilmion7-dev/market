@@ -86,10 +86,18 @@ app.use('/api', storefrontLimiter, storefrontRoutes);
 // Production: serve React frontend
 if (process.env.NODE_ENV === 'production') {
   const frontendPath = path.join(__dirname, '../../web/dist');
-  app.use(express.static(frontendPath, { maxAge: '1y', immutable: true }));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(frontendPath, 'index.html'));
-  });
+  const fs = require('fs');
+  if (fs.existsSync(frontendPath)) {
+    app.use(express.static(frontendPath, { maxAge: '1y', immutable: true }));
+    app.get('*', (req, res) => {
+      const indexPath = path.join(frontendPath, 'index.html');
+      if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+      } else {
+        res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Page not found' } });
+      }
+    });
+  }
 }
 
 app.use(errorHandler);
