@@ -1,4 +1,4 @@
-const API_BASE = '/api';
+const API_BASE = (import.meta.env.VITE_API_URL || '') + '/api';
 const GUEST_ID_KEY = 'marketplace_guest_id';
 
 function getGuestId(): string | null {
